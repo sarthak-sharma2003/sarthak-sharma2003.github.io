@@ -22,7 +22,32 @@
         <button class="diff-btn" data-diff="1" type="button">pro</button>
         <button class="diff-btn" data-diff="2" type="button">world cup final</button>
       </div>
-      <canvas id="pitch" width="640" height="420"></canvas>
+      <div class="pitch-frame">
+        <canvas id="pitch" width="640" height="420"></canvas>
+        <div id="trophy-pop" class="trophy-pop" hidden aria-hidden="true">
+          <svg viewBox="0 0 80 104">
+            <defs>
+              <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#ffe08a"/>
+                <stop offset="55%" stop-color="#ffd54a"/>
+                <stop offset="100%" stop-color="#c9962b"/>
+              </linearGradient>
+            </defs>
+            <!-- globe -->
+            <circle cx="40" cy="18" r="13" fill="url(#gold)"/>
+            <path d="M27 18 h26 M40 5 v26" stroke="#e9c34f" stroke-width="1" fill="none" opacity="0.7"/>
+            <!-- arms holding the globe -->
+            <path d="M29 74 C24 58 22 46 26 38 C29 32 33 29 36 30 C33 36 32 44 34 52 C36 62 38 68 39 74 Z" fill="url(#gold)"/>
+            <path d="M51 74 C56 58 58 46 54 38 C51 32 47 29 44 30 C47 36 48 44 46 52 C44 62 42 68 41 74 Z" fill="url(#gold)"/>
+            <path d="M33 74 q7 -4 14 0 l1 6 h-16 Z" fill="url(#gold)"/>
+            <!-- base with green bands -->
+            <rect x="22" y="80" width="36" height="16" rx="5" fill="url(#gold)"/>
+            <rect x="22" y="84" width="36" height="3.2" fill="#1d7a4f"/>
+            <rect x="22" y="90" width="36" height="3.2" fill="#1d7a4f"/>
+          </svg>
+          <span class="trophy-label mono">trophy round</span>
+        </div>
+      </div>
       <div class="scoreline mono">
         <span>goals <span id="g-goals" class="tel-val">0</span>/<span id="g-shots">0</span></span>
         <button id="g-reset" class="btn" type="button">new round</button>
@@ -39,6 +64,43 @@
     flex-direction: column;
     gap: 14px;
   }
+  .pitch-frame { position: relative; }
+  .trophy-pop {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    pointer-events: none;
+    z-index: 5;
+    background: radial-gradient(ellipse 45% 45% at 50% 48%, rgba(8, 16, 32, 0.85), transparent);
+  }
+  .trophy-pop svg {
+    width: 108px;
+    filter: drop-shadow(0 0 26px rgba(255, 213, 74, 0.5));
+    animation: trophy-in 0.65s cubic-bezier(0.2, 1.7, 0.4, 1);
+  }
+  .trophy-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #ffd54a;
+    animation: trophy-in 0.65s cubic-bezier(0.2, 1.7, 0.4, 1);
+  }
+  .trophy-pop.leaving { animation: trophy-out 0.45s ease forwards; }
+  @keyframes trophy-in {
+    0% { transform: scale(0) rotate(-14deg); opacity: 0; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+  @keyframes trophy-out {
+    to { opacity: 0; transform: translateY(-14px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .trophy-pop svg, .trophy-label { animation: none; }
+  }
+
   #pitch {
     width: 100%;
     height: auto;
@@ -98,9 +160,9 @@
 
   // keeper difficulty: chance he reads your column / row
   const DIFFS = [
-    { name: 'sunday league', mind: 0.15, row: 0.5 },
-    { name: 'pro', mind: 0.35, row: 0.5 },
-    { name: 'world cup final', mind: 0.6, row: 0.65 },
+    { name: 'sunday league', mind: 0.25, row: 0.5 },
+    { name: 'pro', mind: 0.45, row: 0.5 },
+    { name: 'world cup final', mind: 0.75, row: 0.65 },
   ];
   let diff = Math.min(2, Math.max(0, Number(localStorage.getItem('keeper-diff') ?? 1) || 0));
 
@@ -297,6 +359,19 @@
     shotsEl.textContent = String(shots);
   }
 
+  // 3+ goals in a round earns the trophy
+  const trophyEl = document.getElementById('trophy-pop')!;
+  let trophyTimer = 0;
+  function showTrophy() {
+    clearTimeout(trophyTimer);
+    trophyEl.classList.remove('leaving');
+    trophyEl.hidden = false;
+    trophyTimer = window.setTimeout(() => {
+      trophyEl.classList.add('leaving');
+      trophyTimer = window.setTimeout(() => { trophyEl.hidden = true; }, 450);
+    }, 2400);
+  }
+
   function paintDiff() {
     diffBtns.forEach((b) => b.classList.toggle('active', Number(b.dataset.diff) === diff));
   }
@@ -305,6 +380,9 @@
     goals = 0; shots = 0;
     phase = 'ready';
     kickPose = 'idle';
+    clearTimeout(trophyTimer);
+    trophyEl.classList.remove('leaving');
+    trophyEl.hidden = true;
     msg = `click the goal to shoot · keeper: ${DIFFS[diff]!.name}`;
     msgColor = '#8ba0bd';
     updateScore();
@@ -356,6 +434,7 @@
         msg = `round over: ${goals}/${SHOTS_PER_ROUND} — ${verdict}`;
         kickPose = 'idle';
         drawScene({ ...BALL_START, r: 11 }, { x: kTarget.x, y: kTarget.y }, false);
+        if (goals >= 3) showTrophy();
       } else {
         setTimeout(() => {
           if (phase !== 'over') {
