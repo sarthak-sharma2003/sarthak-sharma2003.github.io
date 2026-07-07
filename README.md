@@ -43,3 +43,9 @@ npm run build     # production build → dist/
   and your latest GitHub push, fetched client-side. No keys, no backend.
 - **Shelf cards** — enriched with last-push date + language from the GitHub API.
 - **Halftime** — a 5-shot penalty mini-game. The keeper reads your mind 35% of the time.
+- **Companion** — opt-in cursor pet (husky / cat / rolling ball / magpie) behind the
+  "adopt a companion" chip, bottom-right. Lazy-follows the cursor, idles when you stop,
+  naps in the corner during the penalty game, remembers your choice (localStorage),
+  ambles along the bottom on touch devices, and stays fully off under
+  `prefers-reduced-motion`. Restraint rule: if the site ever needs trimming for
+  professionalism, this goes first — never the shelf or the live data.

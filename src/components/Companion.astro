@@ -1,0 +1,381 @@
+---
+// "Adopt a companion" — an opt-in cursor pet. Restraint rule: this is
+// the first thing to trim if the site ever feels busy; never the shelf
+// or the live data. No splash, no gate — just a quiet chip in the corner.
+---
+
+<button id="adopt-chip" class="adopt-chip mono" type="button" aria-haspopup="true" aria-expanded="false">
+  adopt a companion
+</button>
+
+<div id="pet-picker" class="picker" hidden>
+  <p class="picker-title mono">choose wisely</p>
+  <div class="picker-row">
+    <button class="pick" data-pick="husky" type="button">
+      <svg viewBox="0 0 48 48" class="mini"><g>
+        <path d="M8 32 q-7 -2 -5 -10 q6 2 8 7 Z" fill="#9db4cc"/>
+        <path d="M10 40 q0 -13 11 -13 q13 0 13 13 Z" fill="#9db4cc"/>
+        <circle cx="31" cy="19" r="9" fill="#9db4cc"/>
+        <path d="M24 12 l2 -7 l5 5 Z" fill="#7e97b5"/>
+        <path d="M33 11 l4 -7 l3 6 Z" fill="#7e97b5"/>
+        <ellipse cx="34" cy="22" rx="5.5" ry="4.2" fill="#e8eef7"/>
+        <circle cx="38" cy="21" r="1.5" fill="#0b1322"/>
+        <circle cx="30" cy="17.5" r="1.5" fill="#0b1322"/>
+      </g></svg>
+      <span>husky</span>
+    </button>
+    <button class="pick" data-pick="cat" type="button">
+      <svg viewBox="0 0 48 48" class="mini"><g>
+        <path d="M9 40 q-8 -6 -3 -16 q2 -3 5 -2 q3 2 1 6 q-3 6 0 10 Z" fill="#f0a35e"/>
+        <path d="M12 40 q0 -12 10 -12 q12 0 12 12 Z" fill="#f0a35e"/>
+        <circle cx="31" cy="20" r="8.5" fill="#f0a35e"/>
+        <path d="M24 14 l1 -7 l5 4 Z" fill="#d9853f"/>
+        <path d="M33 12 l4 -6 l2 6 Z" fill="#d9853f"/>
+        <path d="M27 26 q4 3 8 0" stroke="#d9853f" stroke-width="1.4" fill="none"/>
+        <circle cx="28.5" cy="19" r="1.4" fill="#0b1322"/>
+        <circle cx="34.5" cy="19" r="1.4" fill="#0b1322"/>
+      </g></svg>
+      <span>cat</span>
+    </button>
+    <button class="pick" data-pick="ball" type="button">
+      <svg viewBox="0 0 48 48" class="mini spin"><g>
+        <circle cx="24" cy="24" r="12" fill="#eef4fb" stroke="#0b1322" stroke-width="1.2"/>
+        <path d="M24 18 l5 3.6 -1.9 5.8 h-6.2 L19 21.6 Z" fill="#0b1322"/>
+        <path d="M24 12 v6 M29 21.6 l6 -2 M27.1 27.4 l3.6 5 M20.9 27.4 l-3.6 5 M19 21.6 l-6 -2" stroke="#0b1322" stroke-width="1.2" fill="none"/>
+      </g></svg>
+      <span>ball</span>
+    </button>
+    <button class="pick" data-pick="magpie" type="button">
+      <svg viewBox="0 0 48 48" class="mini"><g>
+        <path d="M6 26 l14 4 -2 4 Z" fill="#232f47"/>
+        <path d="M16 34 q-2 -12 10 -12 q10 0 10 9 q0 7 -9 7 q-9 0 -11 -4 Z" fill="#232f47"/>
+        <ellipse cx="30" cy="32" rx="5.5" ry="4.5" fill="#e8eef7"/>
+        <circle cx="32" cy="18" r="6.5" fill="#232f47"/>
+        <path d="M38 17 l6 2 -6 2 Z" fill="#f0a35e"/>
+        <circle cx="33.5" cy="16.5" r="1.3" fill="#e8eef7"/>
+        <path d="M20 27 q4 -2 8 0" stroke="#6ecbff" stroke-width="1.6" fill="none"/>
+        <path d="M26 38 v3 M31 38 v3" stroke="#f0a35e" stroke-width="1.6"/>
+      </g></svg>
+      <span>magpie</span>
+    </button>
+  </div>
+  <button id="pet-release" class="release mono" type="button" hidden>release into the wild</button>
+</div>
+
+<div id="pet" class="pet" data-pet="" data-state="sit" hidden aria-hidden="true">
+  <div class="pet-inner">
+    <svg viewBox="0 0 48 48" class="pet-svg svg-husky">
+      <g class="tail-grp"><path d="M8 32 q-7 -2 -5 -10 q6 2 8 7 Z" fill="#9db4cc"/></g>
+      <path d="M10 40 q0 -13 11 -13 q13 0 13 13 Z" fill="#9db4cc"/>
+      <ellipse cx="28" cy="38" rx="5" ry="4" fill="#e8eef7"/>
+      <circle cx="31" cy="19" r="9" fill="#9db4cc"/>
+      <path d="M24 12 l2 -7 l5 5 Z" fill="#7e97b5"/>
+      <path d="M33 11 l4 -7 l3 6 Z" fill="#7e97b5"/>
+      <ellipse cx="34" cy="22" rx="5.5" ry="4.2" fill="#e8eef7"/>
+      <circle cx="38" cy="21" r="1.5" fill="#0b1322"/>
+      <circle class="eye" cx="30" cy="17.5" r="1.5" fill="#0b1322"/>
+      <path class="eye-shut" d="M28.5 17.5 h3.5" stroke="#0b1322" stroke-width="1.3" fill="none"/>
+    </svg>
+    <svg viewBox="0 0 48 48" class="pet-svg svg-cat">
+      <g class="tail-grp"><path d="M9 40 q-8 -6 -3 -16 q2 -3 5 -2 q3 2 1 6 q-3 6 0 10 Z" fill="#f0a35e"/></g>
+      <path d="M12 40 q0 -12 10 -12 q12 0 12 12 Z" fill="#f0a35e"/>
+      <ellipse cx="27" cy="38" rx="4.5" ry="3.5" fill="#ffe3c4"/>
+      <circle cx="31" cy="20" r="8.5" fill="#f0a35e"/>
+      <path d="M24 14 l1 -7 l5 4 Z" fill="#d9853f"/>
+      <path d="M33 12 l4 -6 l2 6 Z" fill="#d9853f"/>
+      <path d="M27 26 q4 3 8 0" stroke="#d9853f" stroke-width="1.4" fill="none"/>
+      <circle class="eye" cx="28.5" cy="19" r="1.4" fill="#0b1322"/>
+      <circle class="eye" cx="34.5" cy="19" r="1.4" fill="#0b1322"/>
+      <path class="eye-shut" d="M27 19 h3 M33 19 h3" stroke="#0b1322" stroke-width="1.3" fill="none"/>
+    </svg>
+    <svg viewBox="0 0 48 48" class="pet-svg svg-ball">
+      <g class="roller">
+        <circle cx="24" cy="24" r="12" fill="#eef4fb" stroke="#0b1322" stroke-width="1.2"/>
+        <path d="M24 18 l5 3.6 -1.9 5.8 h-6.2 L19 21.6 Z" fill="#0b1322"/>
+        <path d="M24 12 v6 M29 21.6 l6 -2 M27.1 27.4 l3.6 5 M20.9 27.4 l-3.6 5 M19 21.6 l-6 -2" stroke="#0b1322" stroke-width="1.2" fill="none"/>
+      </g>
+    </svg>
+    <svg viewBox="0 0 48 48" class="pet-svg svg-magpie">
+      <g class="tail-grp"><path d="M6 26 l14 4 -2 4 Z" fill="#232f47"/></g>
+      <path d="M16 34 q-2 -12 10 -12 q10 0 10 9 q0 7 -9 7 q-9 0 -11 -4 Z" fill="#232f47"/>
+      <ellipse cx="30" cy="32" rx="5.5" ry="4.5" fill="#e8eef7"/>
+      <circle cx="32" cy="18" r="6.5" fill="#232f47"/>
+      <path d="M38 17 l6 2 -6 2 Z" fill="#f0a35e"/>
+      <circle class="eye" cx="33.5" cy="16.5" r="1.3" fill="#e8eef7"/>
+      <path class="eye-shut" d="M32 16.5 h3" stroke="#e8eef7" stroke-width="1.2" fill="none"/>
+      <path d="M20 27 q4 -2 8 0" stroke="#6ecbff" stroke-width="1.6" fill="none"/>
+      <path d="M26 38 v3 M31 38 v3" stroke="#f0a35e" stroke-width="1.6"/>
+    </svg>
+  </div>
+  <span class="zzz mono" aria-hidden="true">z<span>z</span></span>
+</div>
+
+<style>
+  .adopt-chip {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 45;
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    color: var(--faint);
+    background: rgba(12, 19, 34, 0.75);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    padding: 7px 13px;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .adopt-chip:hover { color: var(--ice); border-color: var(--border-bright); }
+
+  .picker {
+    position: fixed;
+    right: 18px;
+    bottom: 58px;
+    z-index: 46;
+    background: var(--panel);
+    border: 1px solid var(--border-bright);
+    border-radius: 12px;
+    padding: 14px;
+    width: 248px;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
+  }
+  .picker-title {
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 10px;
+  }
+  .picker-row { display: flex; gap: 6px; }
+  .pick {
+    flex: 1;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 6px 2px 5px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .pick:hover { border-color: var(--ice); transform: translateY(-2px); }
+  .pick span { font-family: var(--font-mono); font-size: 0.58rem; color: var(--muted); }
+  .mini { width: 30px; height: 30px; animation: mini-bob 1.6s ease-in-out infinite; }
+  .pick:nth-child(2) .mini { animation-delay: 0.3s; }
+  .pick:nth-child(4) .mini { animation-delay: 0.6s; }
+  .mini.spin { animation: mini-spin 3s linear infinite; }
+  @keyframes mini-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+  @keyframes mini-spin { to { transform: rotate(360deg); } }
+
+  .release {
+    margin-top: 10px;
+    width: 100%;
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    color: var(--faint);
+    background: transparent;
+    border: 1px dashed var(--border-bright);
+    border-radius: 8px;
+    padding: 6px;
+    cursor: pointer;
+  }
+  .release:hover { color: var(--amber); border-color: var(--amber); }
+
+  /* ── the pet itself ─────────────────────────────────────────── */
+  .pet {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 44px;
+    height: 44px;
+    z-index: 40;
+    pointer-events: none;
+    will-change: transform;
+  }
+  .pet-inner { width: 100%; height: 100%; }
+  .pet-svg { display: none; width: 100%; height: 100%; }
+  .pet[data-pet='husky'] .svg-husky,
+  .pet[data-pet='cat'] .svg-cat,
+  .pet[data-pet='ball'] .svg-ball,
+  .pet[data-pet='magpie'] .svg-magpie { display: block; }
+
+  .pet[data-state='walk'] .pet-svg { animation: pet-bob 0.38s ease-in-out infinite; }
+  .pet[data-pet='ball'][data-state='walk'] .pet-svg { animation: none; }
+  @keyframes pet-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
+  .pet[data-state='idle'] .tail-grp {
+    animation: tail-wag 0.9s ease-in-out infinite;
+    transform-origin: 12px 34px;
+  }
+  @keyframes tail-wag { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(14deg); } }
+  .pet[data-pet='magpie'][data-state='idle'] .pet-svg { animation: head-tilt 2.2s ease-in-out infinite; }
+  @keyframes head-tilt { 0%, 100% { transform: rotate(0deg); } 30% { transform: rotate(-7deg); } 60% { transform: rotate(4deg); } }
+
+  .roller { transform-box: view-box; transform-origin: 50% 50%; }
+
+  .eye-shut { display: none; }
+  .pet[data-state='nap'] .eye { display: none; }
+  .pet[data-state='nap'] .eye-shut { display: inline; }
+
+  .zzz {
+    position: absolute;
+    top: -12px;
+    right: -2px;
+    font-size: 0.6rem;
+    color: var(--ice);
+    opacity: 0;
+  }
+  .zzz span { font-size: 0.48rem; display: inline-block; margin-left: 1px; }
+  .pet[data-state='nap'] .zzz { animation: zzz-float 2s ease-in-out infinite; }
+  @keyframes zzz-float {
+    0% { opacity: 0; transform: translateY(3px); }
+    40% { opacity: 0.9; }
+    100% { opacity: 0; transform: translateY(-7px); }
+  }
+
+  .pet.hop .pet-inner { animation: pet-hop 0.5s ease-out; }
+  @keyframes pet-hop {
+    0%, 100% { transform: translateY(0); }
+    45% { transform: translateY(-16px); }
+  }
+
+  /* reduced motion: the whole feature stays off */
+  @media (prefers-reduced-motion: reduce) {
+    .adopt-chip, .picker, .pet { display: none !important; }
+  }
+</style>
+
+<script>
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const coarse = window.matchMedia('(pointer: coarse)').matches;
+
+  const chip = document.getElementById('adopt-chip')!;
+  const picker = document.getElementById('pet-picker')!;
+  const releaseBtn = document.getElementById('pet-release')! as HTMLButtonElement;
+  const pet = document.getElementById('pet')!;
+  const inner = pet.querySelector<HTMLElement>('.pet-inner')!;
+  const roller = pet.querySelector<SVGGElement>('.roller')!;
+
+  const STORE = 'companion';
+  const LERP = 0.045;              // heavy lazy-follow: ~4.5%/frame
+  const IDLE_AFTER = 3500;         // ms sitting still before idle animation
+
+  let active = false;
+  let px = -60, py = 0;            // pet position (walks in from off-screen)
+  let mx = 0, my = 0;              // cursor
+  let ballDeg = 0;
+  let lastMove = 0;
+  let facing = 1;
+  let rafId = 0;
+
+  if (!reduced) {
+    py = window.innerHeight - 64;
+
+    // ── picker UI ───────────────────────────────────────────────
+    const openPicker = (open: boolean) => {
+      picker.hidden = !open;
+      chip.setAttribute('aria-expanded', String(open));
+      releaseBtn.hidden = !localStorage.getItem(STORE);
+    };
+    chip.addEventListener('click', () => openPicker(picker.hidden));
+    document.addEventListener('pointerdown', (e) => {
+      if (!picker.hidden && !picker.contains(e.target as Node) && e.target !== chip) openPicker(false);
+    });
+    picker.querySelectorAll<HTMLElement>('.pick').forEach((b) =>
+      b.addEventListener('click', () => { adopt(b.dataset.pick!); openPicker(false); })
+    );
+    releaseBtn.addEventListener('click', () => { release(); openPicker(false); });
+
+    // ── input ───────────────────────────────────────────────────
+    if (!coarse) {
+      window.addEventListener('pointermove', (e) => { mx = e.clientX; my = e.clientY; });
+    } else {
+      // touch: no finger-following — react to taps with a hop toward them
+      window.addEventListener('pointerdown', (e) => {
+        if (!active) return;
+        mx = e.clientX;
+        pet.classList.add('hop');
+        setTimeout(() => pet.classList.remove('hop'), 520);
+      });
+    }
+
+    const stored = localStorage.getItem(STORE);
+    if (stored) adopt(stored);
+  }
+
+  function adopt(type: string) {
+    localStorage.setItem(STORE, type);
+    pet.dataset.pet = type;
+    pet.hidden = false;
+    chip.textContent = 'companion ▾';
+    if (!active) { active = true; lastMove = performance.now(); rafId = requestAnimationFrame(tick); }
+  }
+
+  function release() {
+    localStorage.removeItem(STORE);
+    active = false;
+    pet.hidden = true;
+    chip.textContent = 'adopt a companion';
+    cancelAnimationFrame(rafId);
+  }
+
+  function targets(now: number): [number, number, boolean] {
+    const H = window.innerHeight, W = window.innerWidth;
+    // nap in the corner while the penalty game is being played:
+    // desktop = cursor over the section; touch = section on screen
+    const game = document.getElementById('halftime');
+    if (game) {
+      const r = game.getBoundingClientRect();
+      const inView = r.top < H && r.bottom > 0;
+      if (coarse ? inView : (inView && my > r.top && my < r.bottom)) {
+        return [20, H - 62, true];
+      }
+    }
+    if (coarse) {
+      // amble gently along the bottom of the screen
+      const wander = Math.sin(now / 6000) * (W / 2 - 70);
+      return [Math.max(16, Math.min(W - 60, W / 2 + wander + (mx ? (mx - W / 2) * 0.3 : 0))), H - 62, false];
+    }
+    const tx = Math.max(4, Math.min(W - 52, mx + 26));
+    const ty = Math.max(4, Math.min(H - 52, my + 20));
+    return [tx, ty, false];
+  }
+
+  function tick(now: number) {
+    if (!active) return;
+    const [tx, ty, napping] = targets(now);
+    const dx = tx - px, dy = ty - py;
+    const dist = Math.hypot(dx, dy);
+
+    const stepX = dx * LERP, stepY = dy * LERP;
+    px += stepX;
+    py += stepY;
+
+    if (dist > 8) {
+      pet.dataset.state = 'walk';
+      lastMove = now;
+      if (Math.abs(stepX) > 0.06) facing = stepX < 0 ? -1 : 1;
+      ballDeg += stepX * 5.2; // roll: rotation tied to distance traveled
+    } else if (napping) {
+      pet.dataset.state = 'nap';
+    } else if (now - lastMove > IDLE_AFTER) {
+      pet.dataset.state = 'idle';
+    } else {
+      pet.dataset.state = 'sit';
+    }
+
+    pet.style.transform = `translate3d(${px}px, ${py}px, 0)`;
+    inner.style.transform = pet.dataset.pet === 'ball' ? '' : `scaleX(${facing})`;
+    if (pet.dataset.pet === 'ball' && roller) roller.style.transform = `rotate(${ballDeg}deg)`;
+
+    if (!document.hidden) rafId = requestAnimationFrame(tick);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && active && !reduced) rafId = requestAnimationFrame(tick);
+  });
+</script>
