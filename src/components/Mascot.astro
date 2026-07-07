@@ -1,0 +1,96 @@
+---
+// Cartoon Sarthak — waves hello for the first few seconds, then chills.
+// Lives in the hero, bottom-left, opposite the igloo.
+---
+
+<svg class="mascot" viewBox="0 0 120 230" aria-hidden="true">
+  <!-- waving arm (behind body, viewer-left) -->
+  <g class="wave-arm">
+    <path d="M38 96 q-10 22 -8 44" stroke="#d64545" stroke-width="13" fill="none" stroke-linecap="round"/>
+    <circle cx="30" cy="144" r="7" fill="#c68a5a"/>
+  </g>
+
+  <!-- legs: black wide-leg pants -->
+  <path d="M42 140 h16 l-2 66 h-18 Z" fill="#17181c"/>
+  <path d="M62 140 h16 l4 66 h-18 Z" fill="#17181c"/>
+  <!-- white sneakers (two of them, importantly) -->
+  <rect x="34" y="204" width="24" height="11" rx="5" fill="#ffffff"/>
+  <rect x="64" y="204" width="24" height="11" rx="5" fill="#ffffff"/>
+  <path d="M35 211 h22 M65 211 h22" stroke="#c3cbd8" stroke-width="1.8"/>
+
+  <!-- torso: red bomber open over black tee -->
+  <path d="M40 84 q20 -8 40 0 l4 58 q-24 8 -48 0 Z" fill="#17181c"/>
+  <path d="M40 84 q-8 2 -10 14 l-4 34 q-2 10 8 10 l8 2 Z" fill="#d64545"/>
+  <path d="M80 84 q8 2 10 14 l4 34 q2 10 -8 10 l-8 2 Z" fill="#d64545"/>
+  <path d="M40 84 l8 -4 8 60 -12 4 Z" fill="#d64545"/>
+  <path d="M80 84 l-8 -4 -8 60 12 4 Z" fill="#d64545"/>
+  <!-- zipper + collar -->
+  <path d="M60 82 v60" stroke="#c3cbd8" stroke-width="1.6"/>
+  <path d="M48 80 l12 10 12 -10 -6 -4 h-12 Z" fill="#b83a3a"/>
+  <!-- hem -->
+  <path d="M36 138 q24 8 48 0 l1 6 q-25 8 -50 0 Z" fill="#b83a3a"/>
+
+  <!-- right arm (viewer-right, resting) -->
+  <path d="M82 96 q10 22 8 44" stroke="#d64545" stroke-width="13" fill="none" stroke-linecap="round"/>
+  <circle cx="90" cy="144" r="7" fill="#c68a5a"/>
+
+  <!-- head -->
+  <rect x="53" y="66" width="14" height="14" rx="5" fill="#c68a5a"/>
+  <circle cx="60" cy="46" r="23" fill="#c68a5a"/>
+  <!-- curly hair: cluster of blobs -->
+  <g fill="#2b1d16">
+    <circle cx="44" cy="32" r="10"/>
+    <circle cx="56" cy="26" r="11"/>
+    <circle cx="69" cy="28" r="10"/>
+    <circle cx="78" cy="37" r="8"/>
+    <circle cx="40" cy="43" r="6"/>
+    <circle cx="80" cy="47" r="5"/>
+    <path d="M38 34 q22 -16 44 0 v10 h-44 Z"/>
+  </g>
+  <!-- ears -->
+  <circle cx="38" cy="50" r="4.5" fill="#c68a5a"/>
+  <circle cx="82" cy="50" r="4.5" fill="#c68a5a"/>
+  <!-- round glasses -->
+  <circle cx="51" cy="50" r="7.5" fill="none" stroke="#17181c" stroke-width="2.4"/>
+  <circle cx="69" cy="50" r="7.5" fill="none" stroke="#17181c" stroke-width="2.4"/>
+  <path d="M58.5 50 h3 M43.5 49 l-5 -1 M76.5 49 l5 -1" stroke="#17181c" stroke-width="2.4" fill="none"/>
+  <!-- eyes, brows, smile -->
+  <circle cx="51" cy="50" r="2.4" fill="#17181c"/>
+  <circle cx="69" cy="50" r="2.4" fill="#17181c"/>
+  <path d="M46 40 q5 -3 9 -1 M65 39 q5 -2 9 1" stroke="#2b1d16" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M55 62 q5 4 10 0" stroke="#8a5a34" stroke-width="2" fill="none" stroke-linecap="round"/>
+</svg>
+
+<style>
+  .mascot {
+    position: absolute;
+    left: 4%;
+    bottom: 0;
+    width: min(130px, 15vw);
+    z-index: 1;
+    opacity: 0.95;
+  }
+  @media (max-width: 720px) {
+    .mascot { width: 84px; left: 2%; opacity: 0.6; }
+  }
+
+  /* wave: raise, three waves, lower — plays once on load (~3.6s) */
+  .wave-arm {
+    transform-box: view-box;
+    transform-origin: 40px 98px; /* shoulder */
+    animation: mascot-wave 3.6s ease-in-out 0.6s 1;
+  }
+  @keyframes mascot-wave {
+    0%        { transform: rotate(0deg); }
+    14%       { transform: rotate(150deg); }
+    26%       { transform: rotate(120deg); }
+    38%       { transform: rotate(155deg); }
+    50%       { transform: rotate(120deg); }
+    62%       { transform: rotate(155deg); }
+    74%       { transform: rotate(135deg); }
+    92%, 100% { transform: rotate(0deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wave-arm { animation: none; }
+  }
+</style>
