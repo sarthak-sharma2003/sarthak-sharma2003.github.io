@@ -1,0 +1,80 @@
+---
+import { certs } from '../data/certs';
+---
+
+<section id="certs">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="index">04</span>
+      <h2>Certifications</h2>
+      <span class="rule"></span>
+    </div>
+
+    <div class="cert-grid">
+      {certs.map((cert) => (
+        <div class="cert reveal">
+          <div class="cert-top mono">
+            <span class="cert-issuer">{cert.issuer}</span>
+            <span class="cert-year">{cert.year}</span>
+          </div>
+          <h3>{cert.title}</h3>
+          <div class="cert-verify mono">
+            {cert.verifyUrl ? (
+              <a href={cert.verifyUrl} target="_blank" rel="noopener">
+                verify credential ↗{cert.credentialId && ` · ${cert.credentialId}`}
+              </a>
+            ) : cert.credentialId ? (
+              <span class="cert-id">id: {cert.credentialId}</span>
+            ) : (
+              <span class="cert-slot">verification key — slot reserved</span>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .cert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  .cert {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: border-color 0.25s;
+  }
+  .cert:hover { border-color: var(--border-bright); }
+  .cert-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .cert-issuer { color: var(--ice); }
+  .cert-year { color: var(--faint); }
+  .cert h3 { font-size: 0.98rem; font-weight: 650; line-height: 1.4; flex: 1; }
+  .cert-verify {
+    font-size: 0.7rem;
+    border-top: 1px solid var(--border);
+    padding-top: 11px;
+  }
+  .cert-verify a { color: var(--aurora); }
+  .cert-id { color: var(--muted); }
+  .cert-slot {
+    color: var(--faint);
+    border: 1px dashed var(--border-bright);
+    border-radius: 6px;
+    padding: 3px 8px;
+    display: inline-block;
+  }
+</style>

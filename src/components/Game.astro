@@ -1,11 +1,12 @@
 ---
 // Halftime: a 5-shot penalty shootout. Click (or tap) where to shoot.
+// Taker: a certain #10 in yellow. Keeper difficulty is selectable.
 ---
 
 <section id="halftime">
   <div class="container">
     <div class="section-head reveal">
-      <span class="index">04</span>
+      <span class="index">05</span>
       <h2>Halftime</h2>
       <span class="rule"></span>
     </div>
@@ -15,6 +16,12 @@
     </p>
 
     <div class="pitch-wrap reveal">
+      <div class="diff-row mono">
+        <span class="diff-label">keeper:</span>
+        <button class="diff-btn" data-diff="0" type="button">sunday league</button>
+        <button class="diff-btn" data-diff="1" type="button">pro</button>
+        <button class="diff-btn" data-diff="2" type="button">world cup final</button>
+      </div>
       <canvas id="pitch" width="640" height="420"></canvas>
       <div class="scoreline mono">
         <span>goals <span id="g-goals" class="tel-val">0</span>/<span id="g-shots">0</span></span>
@@ -41,6 +48,33 @@
     cursor: crosshair;
     touch-action: manipulation;
   }
+  .diff-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+  }
+  .diff-label { color: var(--faint); }
+  .diff-btn {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    padding: 4px 11px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+  }
+  .diff-btn:hover { border-color: var(--border-bright); color: var(--text); }
+  .diff-btn.active {
+    color: var(--aurora);
+    border-color: rgba(74, 222, 128, 0.4);
+    background: rgba(74, 222, 128, 0.07);
+  }
   .scoreline {
     display: flex;
     align-items: center;
@@ -59,21 +93,31 @@
 
   // goal geometry
   const GOAL = { x: 120, y: 60, w: 400, h: 150 };
-  const BALL_START = { x: W / 2, y: H - 50 };
+  const BALL_START = { x: W / 2 + 10, y: H - 52 };
   const SHOTS_PER_ROUND = 5;
 
+  // keeper difficulty: chance he reads your column / row
+  const DIFFS = [
+    { name: 'sunday league', mind: 0.15, row: 0.5 },
+    { name: 'pro', mind: 0.35, row: 0.5 },
+    { name: 'world cup final', mind: 0.6, row: 0.65 },
+  ];
+  let diff = Math.min(2, Math.max(0, Number(localStorage.getItem('keeper-diff') ?? 1) || 0));
+
   type Phase = 'ready' | 'anim' | 'over';
+  type KickPose = 'idle' | 'wind' | 'through';
   let phase: Phase = 'ready';
   let goals = 0, shots = 0;
   let msg = 'click the goal to shoot';
   let msgColor = '#8ba0bd';
+  let kickPose: KickPose = 'idle';
 
   // keeper occupies one of 6 zones: 3 columns × 2 rows
   const colW = GOAL.w / 3, rowH = GOAL.h / 2;
-  let keeper = { col: 1, row: 1 }; // resting center-bottom
 
   const goalsEl = document.getElementById('g-goals')!;
   const shotsEl = document.getElementById('g-shots')!;
+  const diffBtns = [...document.querySelectorAll<HTMLButtonElement>('.diff-btn')];
 
   function zoneCenter(col: number, row: number) {
     return {
@@ -104,6 +148,87 @@
     c.moveTo(-10, -12); c.lineTo(-26, diving ? -26 : -2);
     c.moveTo(10, -12); c.lineTo(26, diving ? -26 : -2);
     c.stroke();
+    c.restore();
+  }
+
+  // the taker — a certain #10, seen from behind
+  function drawKicker(pose: KickPose) {
+    const bx = BALL_START.x - 46; // body center x
+    const footY = H - 34;         // ground line for feet
+    const hipY = footY - 26;
+    const torsoTop = hipY - 34;
+
+    c.save();
+    c.lineCap = 'round';
+
+    // standing leg (left)
+    c.strokeStyle = '#e8c39e';
+    c.lineWidth = 7;
+    c.beginPath();
+    c.moveTo(bx - 6, hipY);
+    c.lineTo(bx - 8, footY - 8);
+    c.stroke();
+    // sock + boot
+    c.strokeStyle = '#eef4fb';
+    c.beginPath(); c.moveTo(bx - 8, footY - 12); c.lineTo(bx - 8, footY - 4); c.stroke();
+    c.fillStyle = '#0b1322';
+    c.beginPath(); c.roundRect(bx - 14, footY - 5, 13, 6, 3); c.fill();
+
+    // kicking leg (right) — pose dependent
+    let kneeX = bx + 8, kneeY = hipY + 12, toeX = bx + 10, toeY = footY - 2;
+    if (pose === 'wind') { kneeX = bx - 2; kneeY = hipY + 8; toeX = bx - 16; toeY = footY - 14; }
+    if (pose === 'through') { kneeX = bx + 16; kneeY = hipY + 4; toeX = bx + 34; toeY = footY - 26; }
+    c.strokeStyle = '#e8c39e';
+    c.lineWidth = 7;
+    c.beginPath();
+    c.moveTo(bx + 6, hipY);
+    c.quadraticCurveTo(kneeX, kneeY, toeX, toeY);
+    c.stroke();
+    // sock on the kicking foot
+    c.strokeStyle = '#eef4fb';
+    c.lineWidth = 7;
+    c.beginPath();
+    c.moveTo((kneeX + toeX) / 2, (kneeY + toeY) / 2);
+    c.lineTo(toeX, toeY);
+    c.stroke();
+    c.fillStyle = '#0b1322';
+    c.beginPath(); c.arc(toeX + 3, toeY, 4.5, 0, Math.PI * 2); c.fill();
+
+    // shorts
+    c.fillStyle = '#2456d6';
+    c.beginPath(); c.roundRect(bx - 12, hipY - 12, 24, 15, 4); c.fill();
+
+    // torso (leans into the strike)
+    const lean = pose === 'through' ? 4 : pose === 'wind' ? -3 : 0;
+    c.fillStyle = '#ffdc2e';
+    c.beginPath(); c.roundRect(bx - 13 + lean, torsoTop, 26, 26, 7); c.fill();
+    // green collar
+    c.fillStyle = '#159347';
+    c.beginPath(); c.roundRect(bx - 6 + lean, torsoTop - 1, 12, 4, 2); c.fill();
+
+    // arms (balance pose)
+    c.strokeStyle = '#ffdc2e';
+    c.lineWidth = 6;
+    c.beginPath();
+    c.moveTo(bx - 11 + lean, torsoTop + 7); c.lineTo(bx - 24 + lean, torsoTop + (pose === 'idle' ? 20 : 2));
+    c.moveTo(bx + 11 + lean, torsoTop + 7); c.lineTo(bx + 24 + lean, torsoTop + (pose === 'idle' ? 20 : 10));
+    c.stroke();
+
+    // shirt print
+    c.fillStyle = '#159347';
+    c.textAlign = 'center';
+    c.font = '600 6px "JetBrains Mono", monospace';
+    c.fillText('NEYMAR JR', bx + lean, torsoTop + 9);
+    c.font = '700 14px "JetBrains Mono", monospace';
+    c.fillText('10', bx + lean, torsoTop + 22);
+
+    // head + hair
+    c.fillStyle = '#e8c39e';
+    c.beginPath(); c.arc(bx + lean, torsoTop - 8, 7.5, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#1a1410';
+    c.beginPath(); c.arc(bx + lean, torsoTop - 10, 7.5, Math.PI * 0.95, Math.PI * 2.05); c.fill();
+    c.beginPath(); c.roundRect(bx + lean - 4, torsoTop - 20, 8, 5, 2); c.fill();
+
     c.restore();
   }
 
@@ -157,6 +282,7 @@
     c.stroke();
 
     drawKeeper(keeperPos.x, keeperPos.y, diving);
+    drawKicker(kickPose);
     drawBall(ball.x, ball.y, ball.r);
 
     // message
@@ -171,11 +297,15 @@
     shotsEl.textContent = String(shots);
   }
 
+  function paintDiff() {
+    diffBtns.forEach((b) => b.classList.toggle('active', Number(b.dataset.diff) === diff));
+  }
+
   function reset() {
     goals = 0; shots = 0;
     phase = 'ready';
-    keeper = { col: 1, row: 1 };
-    msg = 'click the goal to shoot';
+    kickPose = 'idle';
+    msg = `click the goal to shoot · keeper: ${DIFFS[diff]!.name}`;
     msgColor = '#8ba0bd';
     updateScore();
     drawScene({ ...BALL_START, r: 11 }, zoneCenter(1, 1), false);
@@ -188,11 +318,12 @@
     const onTarget =
       tx > GOAL.x && tx < GOAL.x + GOAL.w && ty > GOAL.y && ty < GOAL.y + GOAL.h;
 
-    // keeper picks a zone — 35% chance he reads your mind
+    // keeper picks a zone — difficulty sets how often he reads your mind
+    const { mind, row } = DIFFS[diff]!;
     const shotCol = Math.max(0, Math.min(2, Math.floor((tx - GOAL.x) / colW)));
     const shotRow = ty < GOAL.y + rowH ? 0 : 1;
-    const kCol = Math.random() < 0.35 ? shotCol : Math.floor(Math.random() * 3);
-    const kRow = Math.random() < 0.5 ? 0 : 1;
+    const kCol = Math.random() < mind ? shotCol : Math.floor(Math.random() * 3);
+    const kRow = Math.random() < row ? shotRow : 1 - shotRow;
     const saved = onTarget && kCol === shotCol && kRow === shotRow;
     const kTarget = zoneCenter(kCol, kRow);
     const kStart = zoneCenter(1, 1);
@@ -202,6 +333,7 @@
 
     function frame(now: number) {
       const t = Math.min(1, (now - t0) / DUR);
+      kickPose = t < 0.16 ? 'wind' : 'through';
       const ease = 1 - Math.pow(1 - t, 3);
       const bx = BALL_START.x + (tx - BALL_START.x) * ease;
       const by = BALL_START.y + (ty - BALL_START.y) * ease - Math.sin(t * Math.PI) * 26;
@@ -222,11 +354,13 @@
         phase = 'over';
         const verdict = goals === 5 ? 'perfect — sign him up' : goals >= 3 ? 'solid conversion rate' : 'the keeper wins this one';
         msg = `round over: ${goals}/${SHOTS_PER_ROUND} — ${verdict}`;
+        kickPose = 'idle';
         drawScene({ ...BALL_START, r: 11 }, { x: kTarget.x, y: kTarget.y }, false);
       } else {
         setTimeout(() => {
           if (phase !== 'over') {
             phase = 'ready';
+            kickPose = 'idle';
             drawScene({ ...BALL_START, r: 11 }, zoneCenter(1, 1), false);
           }
         }, 900);
@@ -243,6 +377,16 @@
     shoot(x, y);
   });
 
+  diffBtns.forEach((b) =>
+    b.addEventListener('click', () => {
+      diff = Number(b.dataset.diff);
+      localStorage.setItem('keeper-diff', String(diff));
+      paintDiff();
+      reset();
+    })
+  );
+
   document.getElementById('g-reset')!.addEventListener('click', reset);
+  paintDiff();
   reset();
 </script>
