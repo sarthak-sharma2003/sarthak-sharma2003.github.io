@@ -1,0 +1,46 @@
+---
+// One toolkit, three lenses — deliberately balanced across the
+// software / data / analyst roles this site has to serve.
+const tracks = [
+  {
+    title: 'software development',
+    hint: 'building and shipping it',
+    skills: ['Python', 'JavaScript', 'C# / .NET', 'C++', 'React', 'Flask', 'Docker', 'Git', 'GitHub Actions CI/CD'],
+  },
+  {
+    title: 'data science & engineering',
+    hint: 'moving and trusting the data',
+    skills: ['Pandas', 'SQL / SQLite', 'ETL pipelines', 'Web scraping', 'BeautifulSoup', 'Selenium', 'Data validation', 'LLMs & RAG', 'Agentic workflows'],
+  },
+  {
+    title: 'analysis & business',
+    hint: 'making it mean something',
+    skills: ['Streamlit dashboards', 'Excel / Google Sheets', 'Requirements → deployment', 'Applied statistics', 'Azure', 'SharePoint', 'Stakeholder reporting', 'Business minor'],
+  },
+];
+---
+
+<section id="skills">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="index">03</span>
+      <h2>Toolkit</h2>
+      <span class="rule"></span>
+    </div>
+    <p class="section-sub reveal">
+      Same toolkit, three lenses. The interesting work usually happens where they overlap.
+    </p>
+
+    <div class="skills-grid">
+      {tracks.map((t) => (
+        <div class="skill-col reveal">
+          <h3>{t.title}</h3>
+          <p class="hint">{t.hint}</p>
+          <div class="tags">
+            {t.skills.map((s) => <span class="tag">{s}</span>)}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

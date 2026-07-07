@@ -1,0 +1,268 @@
+---
+// Hero: falling snow, igloo, live Edmonton telemetry.
+---
+
+<header class="hero">
+  <canvas id="snow" aria-hidden="true"></canvas>
+
+  <div class="container hero-inner">
+    <p class="eyebrow mono">~/edmonton · university of alberta · cs + business</p>
+    <h1>Sarthak Sharma</h1>
+    <p class="lede">
+      I build web scrapers, data pipelines, and AI agents that do real work.
+      This site is a shelf — some things on it are shipped, some are still
+      warm from the forge, and there's always an empty slot for what's next.
+    </p>
+    <p class="rotator mono">
+      open&nbsp;to&nbsp;→&nbsp;<span id="role" class="role">software development</span><span class="caret">▊</span>
+    </p>
+
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#projects">browse the shelf ↓</a>
+      <a class="btn" href="https://github.com/sarthak-sharma2003" target="_blank" rel="noopener">github</a>
+      <a class="btn" href="mailto:sarthak7@ualberta.ca">email me</a>
+    </div>
+
+    <div class="telemetry mono" id="telemetry">
+      <span class="tel-item">EDMONTON <span id="wx" class="tel-val">·· °C</span></span>
+      <span class="tel-sep">//</span>
+      <span class="tel-item">LOCAL <span id="clock" class="tel-val">--:--:--</span> MT</span>
+      <span class="tel-sep">//</span>
+      <span class="tel-item">LAST COMMIT <span id="last-commit" class="tel-val">…</span></span>
+    </div>
+  </div>
+
+  <!-- igloo -->
+  <svg class="igloo" viewBox="0 0 300 150" aria-hidden="true">
+    <defs>
+      <radialGradient id="glow" cx="50%" cy="70%" r="60%">
+        <stop offset="0%" stop-color="#ffb454" stop-opacity="0.9" />
+        <stop offset="100%" stop-color="#ffb454" stop-opacity="0" />
+      </radialGradient>
+    </defs>
+    <!-- dome -->
+    <path d="M40 130 A95 95 0 0 1 230 130 Z" fill="#141d31" stroke="#2c4368" stroke-width="1.5"/>
+    <!-- brick lines -->
+    <path d="M56 100 h158 M48 115 h174 M76 85 h118 M98 70 h74" stroke="#22345a" stroke-width="1.2" fill="none"/>
+    <path d="M90 130 v-16 M130 130 v-16 M170 130 v-16 M210 130 v-16 M72 115 v-15 M112 115 v-15 M152 115 v-15 M192 115 v-15 M94 100 v-15 M134 100 v-15 M174 100 v-15 M118 85 v-15 M158 85 v-15" stroke="#22345a" stroke-width="1.2"/>
+    <!-- entrance tunnel -->
+    <path d="M212 130 a34 38 0 0 1 68 0 Z" fill="#101828" stroke="#2c4368" stroke-width="1.5"/>
+    <path d="M226 130 a20 24 0 0 1 40 0 Z" fill="#070b14" stroke="#2c4368" stroke-width="1"/>
+    <ellipse cx="246" cy="128" rx="26" ry="16" fill="url(#glow)"/>
+    <!-- warm window -->
+    <circle cx="135" cy="98" r="8" fill="#ffb454" opacity="0.85"/>
+    <circle cx="135" cy="98" r="8" fill="none" stroke="#2c4368" stroke-width="1.5"/>
+    <!-- ground -->
+    <rect x="0" y="129" width="300" height="4" rx="2" fill="#141d31"/>
+  </svg>
+
+  <div class="hero-fade" aria-hidden="true"></div>
+</header>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 92vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 0 80px;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 80% 55% at 70% -10%, rgba(58, 137, 201, 0.14), transparent),
+      radial-gradient(ellipse 60% 40% at 15% 110%, rgba(74, 222, 128, 0.05), transparent);
+  }
+
+  #snow {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .hero-inner { position: relative; z-index: 2; }
+
+  .eyebrow {
+    color: var(--ice);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    margin-bottom: 18px;
+  }
+
+  h1 {
+    font-size: clamp(2.6rem, 7vw, 4.6rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 22px;
+    background: linear-gradient(120deg, #ffffff 30%, #9ecbee 75%, #6ecbff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .lede {
+    max-width: 560px;
+    color: var(--muted);
+    font-size: 1.05rem;
+    margin-bottom: 26px;
+  }
+
+  .rotator {
+    font-size: 0.88rem;
+    color: var(--faint);
+    margin-bottom: 34px;
+  }
+  .role { color: var(--aurora); }
+  .caret {
+    color: var(--aurora);
+    animation: blink 1.1s steps(1) infinite;
+    margin-left: 2px;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 46px; }
+
+  .telemetry {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--faint);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    background: rgba(12, 19, 34, 0.6);
+    backdrop-filter: blur(6px);
+  }
+  .tel-val { color: var(--ice); }
+  .tel-sep { color: var(--border-bright); }
+
+  .igloo {
+    position: absolute;
+    right: 4%;
+    bottom: 0;
+    width: min(300px, 34vw);
+    z-index: 1;
+    opacity: 0.95;
+  }
+  @media (max-width: 720px) {
+    .igloo { width: 200px; right: -30px; opacity: 0.5; }
+  }
+
+  .hero-fade {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 90px;
+    background: linear-gradient(transparent, var(--bg));
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .caret { animation: none; }
+  }
+</style>
+
+<script>
+  // ── falling snow ─────────────────────────────────────────────
+  const canvas = document.getElementById('snow') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d')!;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  interface Flake { x: number; y: number; r: number; vy: number; vx: number; o: number }
+  let flakes: Flake[] = [];
+  let W = 0, H = 0;
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = canvas.offsetWidth;
+    H = canvas.offsetHeight;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function spawn(): Flake {
+    return {
+      x: Math.random() * W,
+      y: Math.random() * -H,
+      r: 0.8 + Math.random() * 2.2,
+      vy: 0.35 + Math.random() * 0.8,
+      vx: -0.15 + Math.random() * 0.3,
+      o: 0.25 + Math.random() * 0.55,
+    };
+  }
+
+  function tick() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#dce7f5';
+    const t = performance.now() / 3000;
+    for (const f of flakes) {
+      f.y += f.vy;
+      f.x += f.vx + Math.sin(t + f.y / 60) * 0.18;
+      if (f.y > H + 4) { f.y = -4; f.x = Math.random() * W; }
+      ctx.globalAlpha = f.o;
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    if (!document.hidden) requestAnimationFrame(tick);
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && !reduced) requestAnimationFrame(tick);
+  });
+
+  if (!reduced) {
+    resize();
+    flakes = Array.from({ length: Math.min(110, Math.floor(W / 12)) }, spawn);
+    window.addEventListener('resize', resize);
+    requestAnimationFrame(tick);
+  }
+
+  // ── rotating role ────────────────────────────────────────────
+  const roles = ['software development', 'data science', 'analytics', 'building cool things'];
+  const roleEl = document.getElementById('role')!;
+  let ri = 0;
+  if (!reduced) {
+    setInterval(() => {
+      ri = (ri + 1) % roles.length;
+      roleEl.style.opacity = '0';
+      setTimeout(() => {
+        roleEl.textContent = roles[ri]!;
+        roleEl.style.transition = 'opacity 0.35s';
+        roleEl.style.opacity = '1';
+      }, 350);
+    }, 2800);
+  }
+
+  // ── live Edmonton weather (Open-Meteo, no key needed) ────────
+  const wxEl = document.getElementById('wx')!;
+  const WMO: Record<number, string> = {
+    0: 'clear', 1: 'mostly clear', 2: 'partly cloudy', 3: 'overcast',
+    45: 'fog', 48: 'fog', 51: 'drizzle', 61: 'rain', 63: 'rain', 65: 'rain',
+    71: 'snow', 73: 'snow', 75: 'snow', 77: 'snow', 80: 'showers',
+    85: 'snow showers', 86: 'snow showers', 95: 'thunderstorm',
+  };
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=53.55&longitude=-113.49&current_weather=true')
+    .then((r) => r.json())
+    .then((d) => {
+      const cw = d.current_weather;
+      const desc = WMO[cw.weathercode] ?? '';
+      wxEl.textContent = `${Math.round(cw.temperature)}°C${desc ? ' ' + desc : ''}`;
+    })
+    .catch(() => { wxEl.textContent = 'probably cold'; });
+
+  // ── local clock (Mountain Time) ──────────────────────────────
+  const clockEl = document.getElementById('clock')!;
+  const fmt = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Edmonton', hour12: false,
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+  });
+  const tickClock = () => { clockEl.textContent = fmt.format(new Date()); };
+  tickClock();
+  setInterval(tickClock, 1000);
+</script>

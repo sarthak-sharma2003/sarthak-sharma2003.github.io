@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Shelf from '../components/Shelf.astro';
+import Experience from '../components/Experience.astro';
+import Skills from '../components/Skills.astro';
+import Game from '../components/Game.astro';
+---
+
+<Base
+  title="Sarthak Sharma — software · data · analytics"
+  description="Sarthak Sharma builds web scrapers, data pipelines, and AI agents. CS + Business at the University of Alberta. Projects shipped, in progress, and up next."
+>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="nav-name" href="#top">sarthak<span class="accent">.</span>sharma</a>
+      <div class="nav-links">
+        <a href="#projects">/shelf</a>
+        <a href="#experience">/experience</a>
+        <a href="#skills">/toolkit</a>
+        <a href="#halftime">/halftime</a>
+        <a href="mailto:sarthak7@ualberta.ca">/contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="top">
+    <Hero />
+    <Shelf />
+    <Experience />
+    <Skills />
+    <Game />
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="foot-links">
+        <a href="mailto:sarthak7@ualberta.ca">email</a>
+        <a href="https://github.com/sarthak-sharma2003" target="_blank" rel="noopener">github</a>
+        <a href="https://linkedin.com/in/sarthak-sharma07" target="_blank" rel="noopener">linkedin</a>
+      </div>
+      <p class="sign">
+        built with Astro · deployed on GitHub Pages · snow is free in Edmonton
+      </p>
+    </div>
+  </footer>
+</Base>

@@ -1,0 +1,248 @@
+---
+// Halftime: a 5-shot penalty shootout. Click (or tap) where to shoot.
+---
+
+<section id="halftime">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="index">04</span>
+      <h2>Halftime</h2>
+      <span class="rule"></span>
+    </div>
+    <p class="section-sub reveal">
+      You've scrolled this far — you've earned a break. Five penalties,
+      one questionable keeper. Click where you want to shoot.
+    </p>
+
+    <div class="pitch-wrap reveal">
+      <canvas id="pitch" width="640" height="420"></canvas>
+      <div class="scoreline mono">
+        <span>goals <span id="g-goals" class="tel-val">0</span>/<span id="g-shots">0</span></span>
+        <button id="g-reset" class="btn" type="button">new round</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pitch-wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  #pitch {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: radial-gradient(ellipse 90% 70% at 50% 0%, #0d1b2e, #081020);
+    cursor: crosshair;
+    touch-action: manipulation;
+  }
+  .scoreline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+  .tel-val { color: var(--aurora); }
+</style>
+
+<script>
+  const cv = document.getElementById('pitch') as HTMLCanvasElement;
+  const c = cv.getContext('2d')!;
+  const W = cv.width, H = cv.height;
+
+  // goal geometry
+  const GOAL = { x: 120, y: 60, w: 400, h: 150 };
+  const BALL_START = { x: W / 2, y: H - 50 };
+  const SHOTS_PER_ROUND = 5;
+
+  type Phase = 'ready' | 'anim' | 'over';
+  let phase: Phase = 'ready';
+  let goals = 0, shots = 0;
+  let msg = 'click the goal to shoot';
+  let msgColor = '#8ba0bd';
+
+  // keeper occupies one of 6 zones: 3 columns × 2 rows
+  const colW = GOAL.w / 3, rowH = GOAL.h / 2;
+  let keeper = { col: 1, row: 1 }; // resting center-bottom
+
+  const goalsEl = document.getElementById('g-goals')!;
+  const shotsEl = document.getElementById('g-shots')!;
+
+  function zoneCenter(col: number, row: number) {
+    return {
+      x: GOAL.x + colW * col + colW / 2,
+      y: GOAL.y + rowH * row + rowH / 2,
+    };
+  }
+
+  function drawKeeper(x: number, y: number, diving: boolean) {
+    c.save();
+    c.translate(x, y);
+    if (diving) c.rotate(x < W / 2 ? -0.5 : x > W / 2 ? 0.5 : 0);
+    // body
+    c.fillStyle = '#fbbf24';
+    c.beginPath();
+    c.roundRect(-11, -18, 22, 40, 8);
+    c.fill();
+    // head
+    c.fillStyle = '#e8c39e';
+    c.beginPath();
+    c.arc(0, -28, 9, 0, Math.PI * 2);
+    c.fill();
+    // arms out
+    c.strokeStyle = '#fbbf24';
+    c.lineWidth = 6;
+    c.lineCap = 'round';
+    c.beginPath();
+    c.moveTo(-10, -12); c.lineTo(-26, diving ? -26 : -2);
+    c.moveTo(10, -12); c.lineTo(26, diving ? -26 : -2);
+    c.stroke();
+    c.restore();
+  }
+
+  function drawBall(x: number, y: number, r: number) {
+    c.fillStyle = '#eef4fb';
+    c.beginPath();
+    c.arc(x, y, r, 0, Math.PI * 2);
+    c.fill();
+    c.strokeStyle = '#0a1120';
+    c.lineWidth = 1.4;
+    c.stroke();
+    // simple pentagon patch
+    c.fillStyle = '#0a1120';
+    c.beginPath();
+    c.arc(x - r * 0.25, y - r * 0.2, r * 0.32, 0, Math.PI * 2);
+    c.fill();
+  }
+
+  function drawScene(ball: { x: number; y: number; r: number }, keeperPos: { x: number; y: number }, diving: boolean) {
+    c.clearRect(0, 0, W, H);
+
+    // pitch lines
+    c.strokeStyle = 'rgba(110, 203, 255, 0.14)';
+    c.lineWidth = 2;
+    c.strokeRect(60, GOAL.y + GOAL.h + 8, W - 120, H - GOAL.y - GOAL.h - 60);
+    c.beginPath();
+    c.arc(W / 2, H - 50, 34, Math.PI, 0);
+    c.stroke();
+
+    // net
+    c.strokeStyle = 'rgba(220, 231, 245, 0.10)';
+    c.lineWidth = 1;
+    for (let i = 0; i <= 10; i++) {
+      const nx = GOAL.x + (GOAL.w / 10) * i;
+      c.beginPath(); c.moveTo(nx, GOAL.y); c.lineTo(nx, GOAL.y + GOAL.h); c.stroke();
+    }
+    for (let i = 0; i <= 4; i++) {
+      const ny = GOAL.y + (GOAL.h / 4) * i;
+      c.beginPath(); c.moveTo(GOAL.x, ny); c.lineTo(GOAL.x + GOAL.w, ny); c.stroke();
+    }
+
+    // posts
+    c.strokeStyle = '#dce7f5';
+    c.lineWidth = 5;
+    c.lineCap = 'round';
+    c.beginPath();
+    c.moveTo(GOAL.x, GOAL.y + GOAL.h);
+    c.lineTo(GOAL.x, GOAL.y);
+    c.lineTo(GOAL.x + GOAL.w, GOAL.y);
+    c.lineTo(GOAL.x + GOAL.w, GOAL.y + GOAL.h);
+    c.stroke();
+
+    drawKeeper(keeperPos.x, keeperPos.y, diving);
+    drawBall(ball.x, ball.y, ball.r);
+
+    // message
+    c.fillStyle = msgColor;
+    c.font = '600 15px "JetBrains Mono", monospace';
+    c.textAlign = 'center';
+    c.fillText(msg, W / 2, H - 12);
+  }
+
+  function updateScore() {
+    goalsEl.textContent = String(goals);
+    shotsEl.textContent = String(shots);
+  }
+
+  function reset() {
+    goals = 0; shots = 0;
+    phase = 'ready';
+    keeper = { col: 1, row: 1 };
+    msg = 'click the goal to shoot';
+    msgColor = '#8ba0bd';
+    updateScore();
+    drawScene({ ...BALL_START, r: 11 }, zoneCenter(1, 1), false);
+  }
+
+  function shoot(tx: number, ty: number) {
+    if (phase !== 'ready') return;
+    phase = 'anim';
+
+    const onTarget =
+      tx > GOAL.x && tx < GOAL.x + GOAL.w && ty > GOAL.y && ty < GOAL.y + GOAL.h;
+
+    // keeper picks a zone — 35% chance he reads your mind
+    const shotCol = Math.max(0, Math.min(2, Math.floor((tx - GOAL.x) / colW)));
+    const shotRow = ty < GOAL.y + rowH ? 0 : 1;
+    const kCol = Math.random() < 0.35 ? shotCol : Math.floor(Math.random() * 3);
+    const kRow = Math.random() < 0.5 ? 0 : 1;
+    const saved = onTarget && kCol === shotCol && kRow === shotRow;
+    const kTarget = zoneCenter(kCol, kRow);
+    const kStart = zoneCenter(1, 1);
+
+    const t0 = performance.now();
+    const DUR = 480;
+
+    function frame(now: number) {
+      const t = Math.min(1, (now - t0) / DUR);
+      const ease = 1 - Math.pow(1 - t, 3);
+      const bx = BALL_START.x + (tx - BALL_START.x) * ease;
+      const by = BALL_START.y + (ty - BALL_START.y) * ease - Math.sin(t * Math.PI) * 26;
+      const br = 11 - 5 * ease;
+      const kx = kStart.x + (kTarget.x - kStart.x) * ease;
+      const ky = kStart.y + (kTarget.y - kStart.y) * ease;
+      drawScene({ x: bx, y: by, r: br }, { x: kx, y: ky }, t > 0.15);
+      if (t < 1) { requestAnimationFrame(frame); return; }
+
+      // resolve
+      shots++;
+      if (!onTarget) { msg = 'wide! row Z of the stands'; msgColor = '#8ba0bd'; }
+      else if (saved) { msg = 'SAVED — he read you like a csv'; msgColor = '#fbbf24'; }
+      else { goals++; msg = 'GOAL! top bins'; msgColor = '#4ade80'; }
+      updateScore();
+
+      if (shots >= SHOTS_PER_ROUND) {
+        phase = 'over';
+        const verdict = goals === 5 ? 'perfect — sign him up' : goals >= 3 ? 'solid conversion rate' : 'the keeper wins this one';
+        msg = `round over: ${goals}/${SHOTS_PER_ROUND} — ${verdict}`;
+        drawScene({ ...BALL_START, r: 11 }, { x: kTarget.x, y: kTarget.y }, false);
+      } else {
+        setTimeout(() => {
+          if (phase !== 'over') {
+            phase = 'ready';
+            drawScene({ ...BALL_START, r: 11 }, zoneCenter(1, 1), false);
+          }
+        }, 900);
+        drawScene({ x: tx, y: ty, r: 6 }, { x: kTarget.x, y: kTarget.y }, true);
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  cv.addEventListener('pointerdown', (e) => {
+    const rect = cv.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * W;
+    const y = ((e.clientY - rect.top) / rect.height) * H;
+    shoot(x, y);
+  });
+
+  document.getElementById('g-reset')!.addEventListener('click', reset);
+  reset();
+</script>
