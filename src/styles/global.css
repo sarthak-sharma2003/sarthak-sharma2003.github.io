@@ -9,12 +9,15 @@
   --text: #dce7f5;
   --muted: #8ba0bd;
   --faint: #5b6f8d;
-  --ice: #6ecbff;
-  --ice-dim: #3a89c9;
+  --ice: #5eead4;
+  --ice-dim: #2dd4bf;
   --aurora: #4ade80;
+  --violet: #a78bfa;
+  --aurora-grad: linear-gradient(115deg, #2dd4bf, #4ade80 45%, #a78bfa);
   --amber: #fbbf24;
   --warm: #ffb454;
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Bricolage Grotesque', Inter, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
   --maxw: 1060px;
 }
@@ -33,7 +36,7 @@ body {
   overflow-x: hidden;
 }
 
-::selection { background: rgba(110, 203, 255, 0.28); }
+::selection { background: rgba(94, 234, 212, 0.25); }
 
 a { color: var(--ice); text-decoration: none; }
 a:hover { text-decoration: underline; text-underline-offset: 3px; }
@@ -100,9 +103,13 @@ section { padding: 88px 0; position: relative; }
 .section-head .index {
   font-family: var(--font-mono);
   font-size: 0.85rem;
-  color: var(--ice);
+  background: var(--aurora-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 .section-head h2 {
+  font-family: var(--font-display);
   font-size: 1.55rem;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -153,11 +160,11 @@ section { padding: 88px 0; position: relative; }
 .btn:hover {
   text-decoration: none;
   border-color: var(--ice);
-  background: rgba(110, 203, 255, 0.06);
+  background: rgba(45, 212, 191, 0.08);
   transform: translateY(-1px);
 }
 .btn-primary {
-  background: rgba(110, 203, 255, 0.12);
+  background: rgba(45, 212, 191, 0.12);
   border-color: var(--ice-dim);
   color: var(--ice);
 }
@@ -219,7 +226,7 @@ section { padding: 88px 0; position: relative; }
 
 .badge-live    { color: var(--aurora); border-color: rgba(74, 222, 128, 0.35); background: rgba(74, 222, 128, 0.08); }
 .badge-live .dot { animation: pulse 1.6s ease-in-out infinite; }
-.badge-shipped { color: var(--ice); border-color: rgba(110, 203, 255, 0.35); background: rgba(110, 203, 255, 0.07); }
+.badge-shipped { color: var(--ice); border-color: rgba(94, 234, 212, 0.35); background: rgba(94, 234, 212, 0.08); }
 .badge-building{ color: var(--amber); border-color: rgba(251, 191, 36, 0.35); background: rgba(251, 191, 36, 0.07); }
 .badge-building .dot { animation: pulse 1.6s ease-in-out infinite; }
 .badge-next    { color: var(--faint); border-color: var(--border-bright); }
@@ -231,7 +238,7 @@ section { padding: 88px 0; position: relative; }
 
 .card-year { font-family: var(--font-mono); font-size: 0.72rem; color: var(--faint); }
 
-.card-title { font-size: 1.08rem; font-weight: 650; line-height: 1.35; }
+.card-title { font-family: var(--font-display); font-size: 1.08rem; font-weight: 650; line-height: 1.35; }
 .card p { font-size: 0.9rem; color: var(--muted); flex: 1; }
 
 .tags { display: flex; flex-wrap: wrap; gap: 7px; }
@@ -278,7 +285,7 @@ section { padding: 88px 0; position: relative; }
 }
 .xp:hover { border-color: var(--border-bright); }
 .xp-when { font-family: var(--font-mono); font-size: 0.76rem; color: var(--faint); padding-top: 4px; }
-.xp h3 { font-size: 1.02rem; font-weight: 650; }
+.xp h3 { font-family: var(--font-display); font-size: 1.02rem; font-weight: 650; }
 .xp .org { color: var(--ice); font-size: 0.88rem; margin-bottom: 10px; display: block; }
 .xp ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .xp li {
