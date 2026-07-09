@@ -35,6 +35,16 @@ export const projects: Project[] = [
     demo: 'https://world-cup-2026-scraper-predictions.streamlit.app/',
   },
   {
+    title: 'FPL AI Scout',
+    status: 'live',
+    year: '2026',
+    description:
+      'Model-driven Fantasy Premier League squad optimizer: gradient-boosted point projections, a Dixon-Coles team-strength model, and a MILP solver picking transfers, captain, and chip timing against real budget and squad-rule constraints. Backtested across two full historical seasons after catching and excising a leaked feature that had inflated results past the real-world scoring record. Fully static frontend, rebuilt and redeployed nightly by GitHub Actions — zero paid infrastructure.',
+    tags: ['Python', 'LightGBM', 'MILP', 'DuckDB', 'React', 'GitHub Actions'],
+    repo: 'fpl-ai-scout',
+    demo: 'https://sarthak-sharma2003.github.io/fpl-ai-scout/',
+  },
+  {
     title: 'Derivative Trade Reconciliation Dashboard',
     status: 'shipped',
     year: '2025',
