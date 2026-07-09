@@ -35,7 +35,7 @@ export const projects: Project[] = [
     demo: 'https://world-cup-2026-scraper-predictions.streamlit.app/',
   },
   {
-    title: 'FPL AI Scout',
+    title: "Xabi's Long-Xo",
     status: 'live',
     year: '2026',
     description:
