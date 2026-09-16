@@ -45,6 +45,16 @@ export const projects: Project[] = [
     demo: 'https://sarthak-sharma2003.github.io/fpl-ai-scout/',
   },
   {
+    title: 'UCL Scout',
+    status: 'live',
+    year: '2026',
+    description:
+      'UEFA Champions League Fantasy predictor and multi-matchday transfer/chip planner, backtested leak-safe against two real seasons with the edge transferring exactly from tuning to holdout. Decomposed points into UEFA\'s own observed components rather than chasing unavailable xG data, and found the model\'s advantage sits entirely in the knockout rounds — it stays humble against the crowd through the league phase on purpose.',
+    tags: ['Python', 'MILP', 'Backtesting', 'React', 'GitHub Actions'],
+    repo: 'ucl-scout',
+    demo: 'https://sarthak-sharma2003.github.io/ucl-scout/',
+  },
+  {
     title: 'Derivative Trade Reconciliation Dashboard',
     status: 'shipped',
     year: '2025',
