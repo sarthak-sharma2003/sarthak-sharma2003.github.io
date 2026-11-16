@@ -25,6 +25,15 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    title: 'HitApply',
+    status: 'live',
+    year: '2026',
+    description:
+      'Job applications handled from inside the AI assistant you already use. HitApply finds roles that fit your experience, tailors your résumé and cover letter to each one, and fills in the application form. You review and approve before anything is sent. Works with Claude, ChatGPT and other assistants. In limited beta.',
+    tags: ['MCP', 'Browser Extension', 'AI Agents'],
+    demo: 'https://hitapply.app/',
+  },
+  {
     title: "Xabi's Long-Xo",
     status: 'live',
     year: '2026',
