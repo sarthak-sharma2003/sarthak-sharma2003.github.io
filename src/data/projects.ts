@@ -25,16 +25,6 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    title: 'World Cup 2026 Multi-Source Scraper',
-    status: 'live',
-    year: '2026',
-    description:
-      'Full structured coverage of all 48 teams and 104 matches, scraped from three independent sources with cross-source consistency checks — zero malformed rows delivered. Rate-limited, retry-safe, robots.txt-compliant, and refreshing itself on a GitHub Actions cron while the tournament runs.',
-    tags: ['Python', 'BeautifulSoup', 'SQLite', 'GitHub Actions', 'Streamlit'],
-    repo: 'world-cup-2026-scraper-predictions',
-    demo: 'https://world-cup-2026-scraper-predictions.streamlit.app/',
-  },
-  {
     title: "Xabi's Long-Xo",
     status: 'live',
     year: '2026',
@@ -43,6 +33,26 @@ export const projects: Project[] = [
     tags: ['Python', 'LightGBM', 'MILP', 'DuckDB', 'React', 'GitHub Actions'],
     repo: 'fpl-ai-scout',
     demo: 'https://sarthak-sharma2003.github.io/fpl-ai-scout/',
+  },
+  {
+    title: 'Find a Climate Shelter',
+    status: 'live',
+    year: '2026',
+    description:
+      'Shelter finder for Strathcona County, Alberta: which public buildings are open right now for cold, heat, wildfire smoke or a power outage, the closest one, and the way there. Live Environment Canada conditions pick the need on their own. It keeps working with no signal, with the list, a saved county map and the last route all stored on the phone. An MCP server lets AI assistants answer from the same list, and a coverage page puts numbers on the gaps: about 7 in 10 rural residents live more than a 10-minute drive from a shelter with confirmed hours. A student prototype built for a University of Alberta community-partner course, not an official county tool.',
+    tags: ['JavaScript', 'Leaflet', 'PWA', 'MCP', 'Cloudflare Workers', 'GitHub Actions'],
+    repo: 'climate-shelters',
+    demo: 'https://sarthak-sharma2003.github.io/climate-shelters/',
+  },
+  {
+    title: 'World Cup 2026 Multi-Source Scraper',
+    status: 'live',
+    year: '2026',
+    description:
+      'Full structured coverage of all 48 teams and 104 matches, scraped from three independent sources with cross-source consistency checks — zero malformed rows delivered. Rate-limited, retry-safe, robots.txt-compliant, and refreshing itself on a GitHub Actions cron while the tournament runs.',
+    tags: ['Python', 'BeautifulSoup', 'SQLite', 'GitHub Actions', 'Streamlit'],
+    repo: 'world-cup-2026-scraper-predictions',
+    demo: 'https://world-cup-2026-scraper-predictions.streamlit.app/',
   },
   {
     title: 'UCL Scout',
