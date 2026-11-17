@@ -1,18 +1,23 @@
 ---
 // One toolkit, three lenses — deliberately balanced across the
 // software / data / analyst roles this site has to serve.
+// Shown as a tactics board: each lens is a line of the team, each skill a
+// magnet that runs on when the board scrolls in and can be dragged around.
 const tracks = [
   {
+    line: 'Defence',
     title: 'Software development',
     hint: 'Building and shipping it',
     skills: ['Python', 'JavaScript', 'C# / .NET', 'C++', 'React', 'Flask', 'Docker', 'Git', 'GitHub Actions CI/CD'],
   },
   {
+    line: 'Midfield',
     title: 'Data science & engineering',
     hint: 'Moving and trusting the data',
     skills: ['Pandas', 'SQL / SQLite', 'ETL pipelines', 'Web scraping', 'BeautifulSoup', 'Selenium', 'Data validation', 'LLMs & RAG', 'Agentic workflows'],
   },
   {
+    line: 'Attack',
     title: 'Analysis & business',
     hint: 'Making it mean something',
     skills: ['Streamlit dashboards', 'Excel / Google Sheets', 'Requirements → deployment', 'Applied statistics', 'Azure', 'SharePoint', 'Stakeholder reporting', 'Business minor'],
@@ -27,47 +32,181 @@ const tracks = [
       <p>Same toolkit, three lenses. The interesting work usually happens where they overlap.</p>
     </div>
 
-    <div class="lenses">
-      {tracks.map((t) => (
-        <div class="lens">
-          <h3 class="cap">{t.title}</h3>
+    <div class="board" id="board">
+      <svg class="marks" viewBox="0 0 1200 520" preserveAspectRatio="none" aria-hidden="true">
+        <rect x="14" y="14" width="1172" height="492" />
+        <path d="M600 14V506" />
+        <circle cx="600" cy="260" r="74" />
+        <rect x="14" y="140" width="110" height="240" />
+        <rect x="1076" y="140" width="110" height="240" />
+      </svg>
+      {tracks.map((t, li) => (
+        <div class={`third l${li}`}>
+          <p class="line cap">{t.line}</p>
+          <h3>{t.title}</h3>
           <p class="hint">{t.hint}</p>
-          <ul>
-            {t.skills.map((s) => <li>{s}</li>)}
+          <ul class="mags">
+            {t.skills.map((s, i) => (
+              <li class="mag" style={`--i:${li * 3 + i}`} data-cursor="Drag"><i aria-hidden="true"></i>{s}</li>
+            ))}
           </ul>
         </div>
       ))}
+      <button class="reset cap" type="button" hidden>Reset formation</button>
     </div>
   </div>
 </section>
 
 <style>
-  .lenses {
+  .board {
+    position: relative;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(28px, 4vw, 56px);
+    padding: 40px 28px 44px;
+    background: repeating-linear-gradient(90deg, #2f8a4c 0 80px, #2a7f46 80px 160px);
+    box-shadow: 0 30px 60px -30px rgba(10, 12, 22, 0.5), inset 0 0 0 6px var(--n10);
+    overflow: hidden;
   }
-  .lens h3 {
+  .marks {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .marks * { fill: none; stroke: rgba(255, 255, 255, 0.5); stroke-width: 2; vector-effect: non-scaling-stroke; }
+
+  .third { position: relative; padding: 0 22px; text-align: center; }
+  .line {
     display: inline-block;
-    background: var(--cobalt);
+    font-size: 0.78rem;
+    padding: 4px 16px 3px 10px;
+    background: var(--n10);
     color: var(--n0);
-    font-size: 1rem;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  }
+  h3 {
+    margin-top: 12px;
+    font-size: clamp(1.2rem, 1.9vw, 1.5rem);
     font-weight: 800;
-    padding: 8px 24px 7px 12px;
-    clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+    font-stretch: 88%;
+    line-height: 1.1;
+    color: var(--n0);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
   }
-  .hint { margin: 12px 0 14px; color: var(--n6); font-size: 0.98rem; }
-  ul { list-style: none; border-top: 2px solid var(--n10); }
-  li {
-    padding: 11px 0 10px;
-    border-bottom: 1px solid var(--n3);
-    font-weight: 600;
-    font-size: 1rem;
-    color: var(--n9);
+  .hint { margin-top: 4px; font-size: 0.95rem; color: #d7f0de; }
+
+  .mags {
+    list-style: none;
+    margin-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px 10px;
   }
+  .mag {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px 7px 8px;
+    background: var(--n0);
+    color: var(--n10);
+    font-size: 0.92rem;
+    font-weight: 700;
+    border-radius: 999px;
+    box-shadow: 0 6px 12px -4px rgba(4, 30, 14, 0.55);
+    user-select: none;
+    touch-action: auto;
+    transition: transform 0.7s var(--ease), box-shadow 0.25s;
+  }
+  .mag i {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    flex: none;
+  }
+  .l0 .mag i { background: var(--n10); }
+  .l1 .mag i { background: var(--cobalt); }
+  .l2 .mag i { background: var(--red); }
+  .mag.dragging { transition: box-shadow 0.25s; box-shadow: 0 18px 26px -8px rgba(4, 30, 14, 0.6); z-index: 2; cursor: grabbing; }
+
+  /* kick-off: the line runs on from the touchline when the board arrives */
+  .board.pre .mag { transform: translateX(-120vw); }
+  .board.in .mag { transition-delay: calc(var(--i) * 45ms); }
+
+  .reset {
+    position: absolute;
+    right: 18px;
+    bottom: 14px;
+    font-family: var(--font);
+    font-size: 0.78rem;
+    color: var(--n0);
+    background: var(--n10);
+    border: 0;
+    padding: 7px 16px 6px 10px;
+    cursor: pointer;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  }
+  .reset:hover { background: var(--cobalt); }
+
   @media (max-width: 860px) {
-    .lenses { grid-template-columns: 1fr; }
-    ul { columns: 2; column-gap: 20px; }
-    li { break-inside: avoid; font-size: 0.95rem; }
+    .board { grid-template-columns: 1fr; gap: 34px; padding: 30px 12px 34px; background: repeating-linear-gradient(0deg, #2f8a4c 0 80px, #2a7f46 80px 160px); }
+    .marks { display: none; }
+    .third + .third { border-top: 2px solid rgba(255, 255, 255, 0.5); padding-top: 30px; }
+    .mag { font-size: 0.86rem; }
   }
 </style>
+
+<script>
+  const board = document.getElementById('board')!;
+  const mags = [...board.querySelectorAll<HTMLElement>('.mag')];
+  const reset = board.querySelector<HTMLButtonElement>('.reset')!;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // run-on entrance, only if the board hasn't been seen yet
+  if (!reduced && board.getBoundingClientRect().top > innerHeight) {
+    board.classList.add('pre');
+    new IntersectionObserver(([e], io) => {
+      if (!e.isIntersecting) return;
+      board.classList.add('in');
+      board.classList.remove('pre');
+      setTimeout(() => board.classList.remove('in'), 1600);
+      io.disconnect();
+    }, { threshold: 0.25 }).observe(board);
+  }
+
+  // drag the magnets (mouse / pen; touch keeps scrolling the page)
+  const offset = new Map<HTMLElement, { x: number; y: number }>();
+  for (const m of mags) {
+    m.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch') return;
+      e.preventDefault();
+      try { m.setPointerCapture(e.pointerId); } catch {}
+      m.classList.add('dragging');
+      const o = offset.get(m) ?? { x: 0, y: 0 };
+      const sx = e.clientX - o.x, sy = e.clientY - o.y;
+      const move = (ev: PointerEvent) => {
+        const p = { x: ev.clientX - sx, y: ev.clientY - sy };
+        offset.set(m, p);
+        m.style.transform = `translate(${p.x}px, ${p.y}px) rotate(${Math.max(-8, Math.min(8, ev.movementX))}deg)`;
+      };
+      const up = () => {
+        m.classList.remove('dragging');
+        m.removeEventListener('pointermove', move);
+        const p = offset.get(m);
+        if (!p) return; // a click, not a drag
+        m.style.transform = `translate(${p.x}px, ${p.y}px)`;
+        reset.hidden = false;
+      };
+      m.addEventListener('pointermove', move);
+      m.addEventListener('pointerup', up, { once: true });
+      m.addEventListener('lostpointercapture', up, { once: true });
+    });
+  }
+  reset.addEventListener('click', () => {
+    offset.clear();
+    mags.forEach((m) => { m.style.transform = ''; });
+    reset.hidden = true;
+  });
+</script>

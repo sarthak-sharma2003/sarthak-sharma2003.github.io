@@ -9,6 +9,7 @@
 //
 // repo: GitHub repo name (just the name, not the URL) — used to
 // pull live last-push + language stats from the GitHub API.
+// shot: optional screenshot of the live app (public/shots/…webp).
 // ─────────────────────────────────────────────────────────────
 
 export type ProjectStatus = 'live' | 'shipped' | 'building' | 'next';
@@ -21,6 +22,7 @@ export interface Project {
   tags: string[];
   repo?: string;
   demo?: string;
+  shot?: string; // screenshot of the live app in public/shots/, shown as the row's "monitor"
 }
 
 export const projects: Project[] = [
@@ -32,6 +34,7 @@ export const projects: Project[] = [
       'Job applications handled from inside the AI assistant you already use. HitApply finds roles that fit your experience, tailors your résumé and cover letter to each one, and fills in the application form. You review and approve before anything is sent. Works with Claude, ChatGPT and other assistants. In limited beta.',
     tags: ['MCP', 'Browser Extension', 'AI Agents'],
     demo: 'https://hitapply.app/',
+    shot: '/shots/hitapply.webp',
   },
   {
     title: "Xabi's Long-Xo",
@@ -42,6 +45,7 @@ export const projects: Project[] = [
     tags: ['Python', 'LightGBM', 'MILP', 'DuckDB', 'React', 'GitHub Actions'],
     repo: 'fpl-ai-scout',
     demo: 'https://sarthak-sharma2003.github.io/fpl-ai-scout/',
+    shot: '/shots/fpl.webp',
   },
   {
     title: 'Find a Climate Shelter',
@@ -52,6 +56,7 @@ export const projects: Project[] = [
     tags: ['JavaScript', 'Leaflet', 'PWA', 'MCP', 'Cloudflare Workers', 'GitHub Actions'],
     repo: 'climate-shelters',
     demo: 'https://sarthak-sharma2003.github.io/climate-shelters/',
+    shot: '/shots/shelter.webp',
   },
   {
     title: 'World Cup 2026 Multi-Source Scraper',
@@ -62,6 +67,7 @@ export const projects: Project[] = [
     tags: ['Python', 'BeautifulSoup', 'SQLite', 'GitHub Actions', 'Streamlit'],
     repo: 'world-cup-2026-scraper-predictions',
     demo: 'https://world-cup-2026-scraper-predictions.streamlit.app/',
+    shot: '/shots/worldcup.webp',
   },
   {
     title: 'UCL Scout',
@@ -72,6 +78,7 @@ export const projects: Project[] = [
     tags: ['Python', 'MILP', 'Backtesting', 'React', 'GitHub Actions'],
     repo: 'ucl-scout',
     demo: 'https://sarthak-sharma2003.github.io/ucl-scout/',
+    shot: '/shots/ucl.webp',
   },
   {
     title: 'Derivative Trade Reconciliation Dashboard',

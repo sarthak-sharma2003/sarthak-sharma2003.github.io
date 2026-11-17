@@ -110,8 +110,37 @@ a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 4px; 
   font-size: 1.05rem;
   max-width: 60ch;
 }
-.on-ink .sec-head h2::before { background: var(--volt); }
 .on-ink .sec-head p { color: var(--n4); }
+
+/* broadcast stinger: a cobalt plate sweeps across each heading as it
+   scrolls in. Scroll-linked, so it never leaves the heading hidden;
+   browsers without view timelines just show the heading. */
+@supports (animation-timeline: view()) {
+  .sec-head h2 { position: relative; }
+  .sec-head h2::after {
+    content: '';
+    position: absolute;
+    inset: -0.12em -0.3em -0.12em -0.1em;
+    background: var(--cobalt);
+    clip-path: inset(0 100% 0 0);
+    animation: stinger linear both;
+    animation-timeline: view();
+    animation-range: cover 0% cover 38%;
+  }
+  .on-ink .sec-head h2::after { background: var(--n0); }
+  @keyframes stinger {
+    0% { clip-path: inset(0 100% 0 0); }
+    45% { clip-path: inset(0 0 0 0); }
+    100% { clip-path: inset(0 0 0 100%); }
+  }
+}
+
+/* slanted cuts between bands, the plates' edge at page scale */
+.on-ink {
+  clip-path: polygon(0 0, 100% 56px, 100% 100%, 0 calc(100% - 56px));
+  padding-top: calc(clamp(72px, 10vw, 128px) + 40px);
+  padding-bottom: calc(clamp(72px, 10vw, 128px) + 40px);
+}
 
 /* ── buttons: slanted broadcast plates ───────────────────────── */
 

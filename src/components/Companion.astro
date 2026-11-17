@@ -128,6 +128,8 @@
     transition: color 0.2s, background-color 0.2s;
   }
   .adopt-chip:hover { background: var(--volt); }
+  .adopt-chip.away { opacity: 0; transform: translateY(12px); pointer-events: none; }
+  .adopt-chip { transition: color 0.2s, background-color 0.2s, opacity 0.4s var(--ease), transform 0.4s var(--ease); }
 
   .picker {
     position: fixed;
@@ -269,6 +271,12 @@
 
   if (!reduced) {
     py = window.innerHeight - 64;
+
+    // stay out of the hero's way (ticker on desktop, mascot on phones)
+    const hero = document.getElementById('top');
+    if (hero) new IntersectionObserver(([e]) => {
+      chip.classList.toggle('away', e.isIntersecting && picker.hidden);
+    }, { threshold: 0.35 }).observe(hero);
 
     // ── picker UI ───────────────────────────────────────────────
     const openPicker = (open: boolean) => {

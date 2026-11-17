@@ -23,7 +23,7 @@
       </div>
 
       <div class="pitch-frame">
-        <canvas id="pitch" width="640" height="420" aria-label="Penalty pitch. Click the goal to shoot."></canvas>
+        <canvas id="pitch" data-cursor="Shoot" width="640" height="420" aria-label="Penalty pitch. Click the goal to shoot."></canvas>
         <div id="trophy-pop" class="trophy-pop" hidden aria-hidden="true">
           <svg viewBox="0 0 80 104">
             <defs>
@@ -493,7 +493,10 @@
       shots++;
       if (!onTarget) { msg = 'wide! row Z of the stands'; msgColor = '#cdd3ff'; results.push('miss'); }
       else if (saved) { msg = 'SAVED — he read you like a csv'; msgColor = '#ff5a47'; results.push('miss'); }
-      else { goals++; msg = 'GOAL! top bins'; msgColor = '#e4ff3a'; results.push('goal'); }
+      else {
+        goals++; msg = 'GOAL! top bins'; msgColor = '#e4ff3a'; results.push('goal');
+        dispatchEvent(new CustomEvent('ss:goal')); // the score bug celebrates
+      }
       updateScore();
 
       if (shots >= SHOTS_PER_ROUND) {

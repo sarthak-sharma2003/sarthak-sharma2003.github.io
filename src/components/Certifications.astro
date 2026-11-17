@@ -9,69 +9,74 @@ import Icon from './Icon.astro';
       <h2>Certifications</h2>
     </div>
 
-    <ul class="honours">
+    <ol class="honours">
       {certs.map((cert) => (
         <li>
-          <span class="year cap">{cert.year}</span>
-          <div>
-            <h3>{cert.title}</h3>
-            <p class="issuer cap">{cert.issuer}</p>
-          </div>
-          {cert.verifyUrl ? (
-            <a class="verify cap" href={cert.verifyUrl} target="_blank" rel="noopener">
-              Verify{cert.credentialId && ` · ${cert.credentialId}`}<Icon name="out" />
-            </a>
-          ) : cert.credentialId ? (
-            <span class="verify cap">ID {cert.credentialId}</span>
-          ) : null}
+          <span class="year">{cert.year}</span>
+          <h3>{cert.title}</h3>
+          <p class="issuer cap">
+            {cert.issuer}
+            {cert.verifyUrl ? (
+              <a class="verify" href={cert.verifyUrl} target="_blank" rel="noopener">
+                Verify{cert.credentialId && ` · ${cert.credentialId}`}<Icon name="out" />
+              </a>
+            ) : cert.credentialId ? (
+              <span class="verify">ID {cert.credentialId}</span>
+            ) : null}
+          </p>
         </li>
       ))}
-    </ul>
+    </ol>
   </div>
 </section>
 
 <style>
   .certs { padding-top: 0; }
-  .honours {
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
-  }
+  .honours { list-style: none; border-top: 2px solid var(--n10); }
   li {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    background: var(--n0);
-    padding: 22px 24px 24px;
-    border-top: 4px solid var(--n10);
+    display: grid;
+    grid-template-columns: 116px minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 6px clamp(20px, 3vw, 44px);
+    padding: 22px 0;
+    border-bottom: 1px solid var(--n3);
   }
   .year {
-    align-self: flex-start;
-    background: var(--n10);
-    color: var(--volt);
-    font-size: 0.82rem;
-    padding: 4px 14px 3px 8px;
-    clip-path: polygon(0 0, 100% 0, calc(100% - 7px) 100%, 0 100%);
+    font-size: 2.6rem;
+    font-weight: 900;
+    font-style: italic;
+    font-stretch: 62%;
+    line-height: 1;
+    color: var(--cobalt);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
   }
   h3 {
-    font-size: 1.2rem;
+    font-size: clamp(1.2rem, 2vw, 1.55rem);
     font-weight: 800;
-    font-stretch: 90%;
-    letter-spacing: -0.01em;
-    line-height: 1.25;
+    font-stretch: 88%;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
   }
-  .issuer { margin-top: 8px; font-size: 0.82rem; color: var(--n6); }
+  .issuer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px 18px;
+    font-size: 0.85rem;
+    color: var(--n6);
+    text-align: right;
+  }
   .verify {
-    margin-top: auto;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 0.82rem;
     color: var(--cobalt);
     text-decoration: none;
   }
-  @media (max-width: 860px) {
-    .honours { grid-template-columns: 1fr; }
+  @media (max-width: 720px) {
+    li { grid-template-columns: 64px minmax(0, 1fr); }
+    .year { font-size: 1.9rem; text-align: left; }
+    .issuer { grid-column: 2; justify-content: flex-start; text-align: left; }
   }
 </style>

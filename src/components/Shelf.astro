@@ -9,18 +9,19 @@ const stateLabel: Record<string, string> = {
   next: 'Up next',
 };
 const num = (i: number) => String(i + 1).padStart(2, '0');
+const host = (url: string) => new URL(url).host + new URL(url).pathname.replace(/\/$/, '');
 ---
 
 <section id="projects" class="sec">
   <div class="wrap">
     <div class="sec-head">
       <h2>The Shelf</h2>
-      <p>Projects, live and shipped. Push dates come straight from the GitHub API, so you can see what's still moving.</p>
+      <p>Projects, live and shipped. The screens are the real apps; push dates come straight from the GitHub API.</p>
     </div>
 
     <ol class="shelf">
       {projects.map((p, i) => (
-        <li class={`row row-${p.status}`}>
+        <li class={`row row-${p.status} ${p.shot ? 'has-shot' : ''}`}>
           <span class="no" aria-hidden="true"><span>{num(i)}</span></span>
           <div class="main">
             <div class="head">
@@ -31,24 +32,32 @@ const num = (i: number) => String(i + 1).padStart(2, '0');
               <span class="yr cap">{p.year}</span>
             </div>
             <p class="desc">{p.description}</p>
-          </div>
-          {p.status !== 'next' && (
-            <div class="side">
-              {p.tags.length > 0 && <p class="stack cap">{p.tags.join(' / ')}</p>}
-              <div class="links">
-                {p.demo && (
-                  <a class="btn btn-ink" href={p.demo} target="_blank" rel="noopener">
-                    Open live app<Icon name="out" /><span class="sr-only"> for {p.title}</span>
-                  </a>
-                )}
-                {p.repo && (
-                  <a class="code" href={`https://github.com/sarthak-sharma2003/${p.repo}`} target="_blank" rel="noopener">
-                    Code<Icon name="out" /><span class="sr-only"> for {p.title}</span>
-                  </a>
-                )}
+            {p.status !== 'next' && (
+              <div class="meta">
+                {p.tags.length > 0 && <p class="stack cap">{p.tags.join(' / ')}</p>}
+                <div class="links">
+                  {p.demo && (
+                    <a class="btn btn-ink" href={p.demo} target="_blank" rel="noopener">
+                      Open live app<Icon name="out" /><span class="sr-only"> for {p.title}</span>
+                    </a>
+                  )}
+                  {p.repo && (
+                    <a class="code" href={`https://github.com/sarthak-sharma2003/${p.repo}`} target="_blank" rel="noopener">
+                      Code<Icon name="out" /><span class="sr-only"> for {p.title}</span>
+                    </a>
+                  )}
+                  {p.repo && <span class="gh-stat cap" data-repo={p.repo}></span>}
+                </div>
               </div>
-              {p.repo && <p class="gh-stat cap" data-repo={p.repo}></p>}
-            </div>
+            )}
+          </div>
+          {p.shot && p.demo && (
+            <a class="mon" href={p.demo} target="_blank" rel="noopener" tabindex="-1" data-cursor="Open app">
+              <span class="mon-screen">
+                <img src={p.shot} alt={`Screenshot of ${p.title}`} loading="lazy" decoding="async" />
+              </span>
+              <span class="mon-bar cap"><span>{host(p.demo)}</span><span class="mon-live">Live feed</span></span>
+            </a>
           )}
         </li>
       ))}
@@ -62,11 +71,12 @@ const num = (i: number) => String(i + 1).padStart(2, '0');
   .row {
     position: relative;
     display: grid;
-    grid-template-columns: 116px minmax(0, 1fr) 290px;
+    grid-template-columns: 116px minmax(0, 1fr);
     gap: 0 clamp(20px, 3vw, 44px);
-    padding: 34px 0;
+    padding: 40px 0;
     border-bottom: 1px solid var(--n3);
   }
+  .row.has-shot { grid-template-columns: 116px minmax(0, 1fr) minmax(0, 400px); }
 
   /* the number cell: cobalt numeral that floods on hover */
   .no {
@@ -137,15 +147,9 @@ const num = (i: number) => String(i + 1).padStart(2, '0');
     font-size: 1rem;
   }
 
-  .side {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-    padding-top: 6px;
-  }
+  .meta { margin-top: 22px; display: grid; gap: 14px; }
   .stack { font-size: 0.82rem; color: var(--n8); line-height: 1.5; }
-  .links { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; }
+  .links { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; }
   .links .btn { padding: 12px 22px 11px 16px; font-size: 0.84rem; }
   .code {
     display: inline-flex;
@@ -163,6 +167,46 @@ const num = (i: number) => String(i + 1).padStart(2, '0');
   .gh-stat { font-size: 0.78rem; color: var(--n6); }
   .gh-stat:empty { display: none; }
 
+  /* ── the monitor: the real app, angled on the gantry; straightens and
+     pans down through the page on hover, like footage ───────────── */
+  .mon {
+    align-self: start;
+    display: block;
+    background: var(--n10);
+    padding: 7px 7px 0;
+    text-decoration: none;
+    color: var(--n4);
+    transform: perspective(1100px) rotateY(-14deg) rotateZ(1deg);
+    transform-origin: left center;
+    box-shadow: 18px 26px 40px -22px rgba(10, 12, 22, 0.55);
+    transition: transform 0.7s var(--ease), box-shadow 0.7s var(--ease);
+  }
+  .mon-screen { display: block; aspect-ratio: 16 / 10; overflow: hidden; background: var(--n9); }
+  .mon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 0%;
+    transition: object-position 5s cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  .mon-bar {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 4px 9px;
+    font-size: 0.72rem;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .mon-bar span:first-child { overflow: hidden; text-overflow: ellipsis; }
+  .mon-live { color: var(--volt); }
+  .row:hover .mon, .mon:focus-visible {
+    transform: perspective(1100px) rotateY(0) rotateZ(0) scale(1.04);
+    box-shadow: 0 30px 50px -24px rgba(10, 12, 22, 0.6);
+  }
+  .row:hover .mon img { object-position: 50% 100%; }
+
   /* the reserved slot: a numbered empty space, on purpose */
   .row-next .no { color: transparent; -webkit-text-stroke: 1.5px var(--n4); }
   .row-next h3 { color: var(--n6); }
@@ -170,15 +214,15 @@ const num = (i: number) => String(i + 1).padStart(2, '0');
   .row-next:hover .no::before { transform: scaleX(0); }
 
   @media (max-width: 1040px) {
-    .row { grid-template-columns: 84px minmax(0, 1fr); }
-    .side { grid-column: 2; padding-top: 20px; }
+    .row, .row.has-shot { grid-template-columns: 84px minmax(0, 1fr); }
     .no { height: 70px; font-size: 3.4rem; }
+    .mon { grid-column: 2; margin-top: 26px; max-width: 520px; transform: none; }
   }
   @media (max-width: 600px) {
-    .row { grid-template-columns: 1fr; padding: 28px 0; }
+    .row, .row.has-shot { grid-template-columns: 1fr; padding: 30px 0; }
     .no { justify-self: start; height: auto; font-size: 2.6rem; padding: 0 18px 0 0; margin-bottom: 8px; }
     .no::before { display: none; }
-    .side { grid-column: 1; }
+    .mon { grid-column: 1; }
   }
 </style>
 
