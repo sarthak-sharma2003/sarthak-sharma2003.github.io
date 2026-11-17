@@ -12,6 +12,13 @@ const towers = ['t1', 't2', 't3', 't4'];
 ---
 
 <section id="top" class="hero on-cobalt">
+  <!-- the cold open plays once per visit, and never when landing on a #section -->
+  <script is:inline>
+    try {
+      if (sessionStorage.getItem('ss-intro') || location.hash) document.documentElement.classList.add('lit');
+      sessionStorage.setItem('ss-intro', '1');
+    } catch (e) {}
+  </script>
   <svg class="pitch" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <path d="M1030 -10V910" />
     <circle cx="1030" cy="520" r="230" />
@@ -57,7 +64,7 @@ const towers = ['t1', 't2', 't3', 't4'];
         <div class="card-front" aria-hidden="true">
           <span class="foil"></span>
           <span class="c-no">07</span>
-          <span class="c-pos cap">Software<br />Data<br />Analytics</span>
+          <span class="c-pos cap">CS + Business<br />UAlberta</span>
           <span class="c-city cap">Edmonton, AB</span>
           <div class="c-player"><Mascot /></div>
           <div class="c-name">Sharma</div>
@@ -94,8 +101,8 @@ const towers = ['t1', 't2', 't3', 't4'];
 
 <style>
   .hero {
-    --lights: 0.3s;  /* first bank */
-    --step: 0.26s;   /* gap between banks */
+    --lights: 0.1s;  /* first bank */
+    --step: 0.12s;  /* gap between banks */
     position: relative;
     min-height: 100svh;
     display: flex;
@@ -132,7 +139,7 @@ const towers = ['t1', 't2', 't3', 't4'];
     background: #04061a;
     opacity: 0;
     pointer-events: none;
-    animation: night 1.6s linear backwards;
+    animation: night 0.8s linear backwards;
   }
   @keyframes night {
     0%, 18% { opacity: 1; }
@@ -144,7 +151,7 @@ const towers = ['t1', 't2', 't3', 't4'];
 
   .tower {
     position: absolute;
-    top: -6px;
+    top: 66px;
     z-index: 2;
     width: clamp(84px, 9vw, 132px);
     transform: perspective(300px) rotateX(24deg);
@@ -169,7 +176,7 @@ const towers = ['t1', 't2', 't3', 't4'];
 
   .beam {
     position: absolute;
-    top: 30px;
+    top: 100px;
     z-index: 2;
     width: 58vw;
     height: 120%;
@@ -217,7 +224,7 @@ const towers = ['t1', 't2', 't3', 't4'];
     display: inline-block;
     font-stretch: 125%;
     transition: font-stretch 0.5s var(--ease), font-weight 0.5s var(--ease);
-    animation: squeeze 0.9s var(--ease) calc(2.2s + var(--i) * 45ms) 1;
+    animation: squeeze 0.9s var(--ease) calc(1.5s + var(--i) * 45ms) 1;
   }
   @keyframes squeeze { 40% { font-stretch: 64%; font-weight: 500; } }
 
@@ -244,7 +251,7 @@ const towers = ['t1', 't2', 't3', 't4'];
     perspective: 1300px;
     display: grid;
     place-items: center;
-    animation: float 7s ease-in-out 3s infinite;
+    animation: float 7s ease-in-out 2s infinite;
   }
   @keyframes float { 50% { transform: translateY(-10px); } }
   .card {
@@ -255,7 +262,7 @@ const towers = ['t1', 't2', 't3', 't4'];
     transform-style: preserve-3d;
     transform: rotateX(var(--rx)) rotateY(var(--ry));
     transition: transform 0.6s var(--ease);
-    animation: card-in 1.4s var(--ease) 1.25s backwards;
+    animation: card-in 1s var(--ease) 0.4s backwards;
   }
   @keyframes card-in {
     0% { transform: translateY(120px) rotateY(-200deg) rotateX(20deg) scale(0.6); opacity: 0; }
@@ -283,7 +290,7 @@ const towers = ['t1', 't2', 't3', 't4'];
   .card-front {
     overflow: hidden;
     background:
-      repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.045) 0 22px, transparent 22px 44px),
+      repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.025) 0 22px, transparent 22px 44px),
       linear-gradient(165deg, #3348ff 0%, var(--cobalt-deep) 55%, var(--cobalt-night) 100%);
     box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.22);
   }
@@ -373,13 +380,15 @@ const towers = ['t1', 't2', 't3', 't4'];
   }
   .foil {
     --fx: 50%; --fy: 50%;
-    background: linear-gradient(115deg,
-      transparent 25%, rgba(228, 255, 58, 0.5) 38%, rgba(94, 226, 255, 0.45) 46%,
-      rgba(255, 110, 220, 0.4) 54%, rgba(228, 255, 58, 0.4) 62%, transparent 75%);
-    background-size: 300% 300%;
-    background-position: var(--fx) var(--fy);
+    /* two crossed rainbow fields read as iridescence, not stripes */
+    background:
+      linear-gradient(115deg, transparent 20%, rgba(255, 70, 200, 0.45) 34%, rgba(70, 220, 255, 0.45) 46%,
+        rgba(228, 255, 58, 0.45) 58%, rgba(255, 70, 200, 0.35) 70%, transparent 84%),
+      radial-gradient(circle at var(--fx) var(--fy), rgba(120, 255, 230, 0.35), transparent 55%);
+    background-size: 260% 260%, 100% 100%;
+    background-position: var(--fx) var(--fy), 0 0;
     mix-blend-mode: color-dodge;
-    opacity: 0.5;
+    opacity: 0.6;
     transition: background-position 0.6s var(--ease);
   }
   .glare {
@@ -394,7 +403,7 @@ const towers = ['t1', 't2', 't3', 't4'];
     inset: -20%;
     background: linear-gradient(115deg, transparent 42%, rgba(255, 255, 255, 0.7) 50%, transparent 58%);
     transform: translateX(-100%);
-    animation: shine 1.1s var(--ease) 2.35s backwards;
+    animation: shine 1.1s var(--ease) 1.3s backwards;
     pointer-events: none;
     opacity: 0;
   }
@@ -448,11 +457,20 @@ const towers = ['t1', 't2', 't3', 't4'];
   }
   @keyframes rise { from { opacity: 0; transform: translateY(26px); } }
   @keyframes slide { from { opacity: 0; transform: translateX(-30px); } }
-  .name .word { animation: wipe 0.9s var(--ease) 1.3s backwards; }
-  .name .word + .word { animation-delay: 1.42s; }
-  .position { animation: slide 0.7s var(--ease) 1.62s backwards; }
-  .lede, .cta-row { animation: rise 0.8s var(--ease) 1.72s backwards; }
-  .ticker { animation: rise 0.8s var(--ease) 1.9s backwards; }
+  .name .word { animation: wipe 0.7s var(--ease) 0.35s backwards; }
+  .name .word + .word { animation-delay: 0.43s; }
+  .position { animation: slide 0.6s var(--ease) 0.5s backwards; }
+  .lede, .cta-row { animation: rise 0.6s var(--ease) 0.55s backwards; }
+  .ticker { animation: rise 0.7s var(--ease) 0.7s backwards; }
+
+  /* repeat visit or deep link: already lit, nothing waits */
+  :global(html.lit) .hero :is(.night, .lamp, .beam, .word, .position, .lede, .cta-row, .ticker, .card, .card-front, .ch) {
+    animation: none;
+  }
+  :global(html.lit) .hero .card-front::after { animation: none; }
+
+  /* the card's angled corner never clips the first stat */
+  .c-stats div:first-child { padding-left: 30px; }
 
   @media (max-width: 880px) {
     .hero { padding-top: 72px; }
@@ -469,6 +487,9 @@ const towers = ['t1', 't2', 't3', 't4'];
     .c-stats dd { font-size: 1.3rem; }
     .c-stats dt { font-size: 0.55rem; }
     .c-stats div { padding: 0 10px; }
+    .c-stats div:first-child { padding-left: 30px; }
+    .tower { display: none; }
+    .beam { top: 0; }
     .tower.t2, .tower.t3, .beam.t2, .beam.t3 { display: none; }
     .beam { width: 90vw; }
   }
@@ -688,7 +709,7 @@ const towers = ['t1', 't2', 't3', 't4'];
     setTimeout(() => {
       measure();
       Object.assign(ball, { x: W * (W > 880 ? 0.56 : 0.78), y: -60, vx: W > 880 ? -3.5 : -1.5, vy: 2, live: true });
-    }, 2300);
+    }, document.documentElement.classList.contains('lit') ? 300 : 1300);
   }
 
   // ── pointer: kick, tilt the card, push the snow, bend the name ──

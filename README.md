@@ -16,6 +16,7 @@ Edit [`src/data/projects.ts`](src/data/projects.ts) and add one entry:
   tags: ['Python', 'Whatever'],
   repo: 'my-repo-name', // optional: enables live "pushed Xd ago" stat
   demo: 'https://...',  // optional
+  shot: '/shots/my-thing.webp', // optional: screenshot of the live app (public/shots/)
 }
 ```
 
@@ -39,10 +40,16 @@ npm run build     # production build → dist/
 
 ## What's live on the page
 
+- **Cold open** — the hero starts dark; four floodlight banks switch on in the snow, then the
+  player card (cartoon Sarthak, real stats) flips in and tilts toward the cursor with holo foil.
+- **The ball** — a kickable football with simple physics; it knocks the letters of the name around.
 - **Live ticker** (bottom of the hero) — real Edmonton weather (Open-Meteo), local clock,
   your latest GitHub push, and every `live` project, fetched client-side. No keys, no backend.
 - **Score bug** (top-left) — its match clock is scroll progress: 0' at the top, FT at the footer.
-- **Shelf rows** — enriched with last-push date + language from the GitHub API.
+- **Shelf rows** — the real live apps on angled "monitors" that pan through the page on hover,
+  plus last-push date + language from the GitHub API.
+- **Toolkit** — a tactics board; skills are magnets you can drag around.
+- **Cursor** — says what a click does: Kick, Shoot, Open app, Drag.
 - **Penalties** — a 5-shot shootout with a broadcast tracker. Keeper difficulty is selectable.
 - **Companion** — opt-in cursor pet (husky / cat / rolling ball / magpie) behind the
   "adopt a companion" chip, bottom-right. Lazy-follows the cursor, idles when you stop,
