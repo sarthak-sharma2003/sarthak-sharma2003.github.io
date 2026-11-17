@@ -3,44 +3,71 @@
 // software / data / analyst roles this site has to serve.
 const tracks = [
   {
-    title: 'software development',
-    hint: 'building and shipping it',
+    title: 'Software development',
+    hint: 'Building and shipping it',
     skills: ['Python', 'JavaScript', 'C# / .NET', 'C++', 'React', 'Flask', 'Docker', 'Git', 'GitHub Actions CI/CD'],
   },
   {
-    title: 'data science & engineering',
-    hint: 'moving and trusting the data',
+    title: 'Data science & engineering',
+    hint: 'Moving and trusting the data',
     skills: ['Pandas', 'SQL / SQLite', 'ETL pipelines', 'Web scraping', 'BeautifulSoup', 'Selenium', 'Data validation', 'LLMs & RAG', 'Agentic workflows'],
   },
   {
-    title: 'analysis & business',
-    hint: 'making it mean something',
+    title: 'Analysis & business',
+    hint: 'Making it mean something',
     skills: ['Streamlit dashboards', 'Excel / Google Sheets', 'Requirements → deployment', 'Applied statistics', 'Azure', 'SharePoint', 'Stakeholder reporting', 'Business minor'],
   },
 ];
 ---
 
-<section id="skills">
-  <div class="container">
-    <div class="section-head reveal">
-      <span class="index">03</span>
+<section id="skills" class="sec">
+  <div class="wrap">
+    <div class="sec-head">
       <h2>Toolkit</h2>
-      <span class="rule"></span>
+      <p>Same toolkit, three lenses. The interesting work usually happens where they overlap.</p>
     </div>
-    <p class="section-sub reveal">
-      Same toolkit, three lenses. The interesting work usually happens where they overlap.
-    </p>
 
-    <div class="skills-grid">
+    <div class="lenses">
       {tracks.map((t) => (
-        <div class="skill-col reveal">
-          <h3>{t.title}</h3>
+        <div class="lens">
+          <h3 class="cap">{t.title}</h3>
           <p class="hint">{t.hint}</p>
-          <div class="tags">
-            {t.skills.map((s) => <span class="tag">{s}</span>)}
-          </div>
+          <ul>
+            {t.skills.map((s) => <li>{s}</li>)}
+          </ul>
         </div>
       ))}
     </div>
   </div>
 </section>
+
+<style>
+  .lenses {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(28px, 4vw, 56px);
+  }
+  .lens h3 {
+    display: inline-block;
+    background: var(--cobalt);
+    color: var(--n0);
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 8px 24px 7px 12px;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  }
+  .hint { margin: 12px 0 14px; color: var(--n6); font-size: 0.98rem; }
+  ul { list-style: none; border-top: 2px solid var(--n10); }
+  li {
+    padding: 11px 0 10px;
+    border-bottom: 1px solid var(--n3);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--n9);
+  }
+  @media (max-width: 860px) {
+    .lenses { grid-template-columns: 1fr; }
+    ul { columns: 2; column-gap: 20px; }
+    li { break-inside: avoid; font-size: 0.95rem; }
+  }
+</style>

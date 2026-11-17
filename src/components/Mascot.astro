@@ -1,11 +1,10 @@
 ---
-// Cartoon Sarthak — waves hello for the first few seconds, then chills.
-// Lives in the hero, bottom-left, opposite the igloo.
-// The left arm exists ONLY inside .wave-arm — the jacket body has no
-// sleeve-like flaps, so raising the arm never leaves a ghost limb behind.
+// Cartoon Sarthak — the player cut-out on the intro card. Waves hello once,
+// foot on the ball. The left arm exists ONLY inside .wave-arm, so raising
+// it never leaves a ghost limb behind.
 ---
 
-<svg class="mascot" viewBox="0 0 120 230" aria-hidden="true">
+<svg class="mascot" viewBox="0 0 136 232" aria-hidden="true">
   <!-- waving arm (the one and only left arm) -->
   <g class="wave-arm">
     <path d="M40 94 q-9 20 -7 42" stroke="#d64545" stroke-width="12" fill="none" stroke-linecap="round"/>
@@ -19,6 +18,13 @@
   <rect x="36" y="203" width="24" height="11" rx="5" fill="#ffffff"/>
   <rect x="64" y="203" width="24" height="11" rx="5" fill="#ffffff"/>
   <path d="M37 210 h22 M65 210 h22" stroke="#c3cbd8" stroke-width="1.8"/>
+
+  <!-- the ball, at his feet -->
+  <g transform="translate(108 212)">
+    <circle r="12" fill="#ffffff" stroke="#17181c" stroke-width="1.6"/>
+    <path d="M0 -5.5 l5.2 3.8 -2 6.1 h-6.4 l-2 -6.1 Z" fill="#17181c"/>
+    <path d="M0 -12 v6.5 M5.2 -1.7 l6.3 -2 M3.2 4.4 l3.7 5.4 M-3.2 4.4 l-3.7 5.4 M-5.2 -1.7 l-6.3 -2" stroke="#17181c" stroke-width="1.4" fill="none"/>
+  </g>
 
   <!-- torso: one clean red bomber shape -->
   <path d="M38 84 Q60 74 82 84 L87 140 Q60 149 33 140 Z" fill="#d64545"/>
@@ -62,22 +68,22 @@
 
 <style>
   .mascot {
-    position: absolute;
-    left: 4%;
-    bottom: 0;
-    width: min(168px, 18vw);
-    z-index: 2; /* above the hero's bottom fade, still behind .hero-inner content */
-    opacity: 0.97;
-  }
-  @media (max-width: 720px) {
-    .mascot { width: 104px; left: 2%; opacity: 0.65; }
+    position: relative;
+    height: 88%;
+    width: auto;
+    max-width: 100%;
+    /* broadcast cut-out: white keyline + a floor shadow */
+    filter:
+      drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff)
+      drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff)
+      drop-shadow(0 26px 30px rgba(8, 14, 90, 0.45));
   }
 
-  /* wave: raise, three waves, lower — plays once on load (~3.6s) */
+  /* wave: raise, three waves, lower — plays once on load */
   .wave-arm {
     transform-box: view-box;
     transform-origin: 40px 96px; /* shoulder */
-    animation: mascot-wave 3.6s ease-in-out 0.6s 1;
+    animation: mascot-wave 3.6s ease-in-out 1.2s 1;
   }
   @keyframes mascot-wave {
     0%        { transform: rotate(0deg); }
@@ -88,8 +94,5 @@
     62%       { transform: rotate(155deg); }
     74%       { transform: rotate(135deg); }
     92%, 100% { transform: rotate(0deg); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .wave-arm { animation: none; }
   }
 </style>

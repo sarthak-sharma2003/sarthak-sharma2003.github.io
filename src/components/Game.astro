@@ -1,29 +1,29 @@
 ---
-// Halftime: a 5-shot penalty shootout. Click (or tap) where to shoot.
+// Penalties: a 5-shot shootout. Click (or tap) where to shoot.
 // Taker: a certain #10 in yellow. Keeper difficulty is selectable.
+// (Section id stays `halftime`: the companion naps when it's in view.)
 ---
 
-<section id="halftime">
-  <div class="container">
-    <div class="section-head reveal">
-      <span class="index">05</span>
-      <h2>Halftime</h2>
-      <span class="rule"></span>
+<section id="halftime" class="sec pens-sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Penalties</h2>
+      <p>Level after 90 minutes. Five penalties, one questionable keeper. Click where you want to shoot.</p>
     </div>
-    <p class="section-sub reveal">
-      You've scrolled this far — you've earned a break. Five penalties,
-      one questionable keeper. Click where you want to shoot.
-    </p>
 
-    <div class="pitch-wrap reveal">
-      <div class="diff-row mono">
-        <span class="diff-label">keeper:</span>
-        <button class="diff-btn" data-diff="0" type="button">sunday league</button>
-        <button class="diff-btn" data-diff="1" type="button">pro</button>
-        <button class="diff-btn" data-diff="2" type="button">world cup final</button>
+    <div class="shootout">
+      <div class="board">
+        <span class="board-title cap">Shootout</span>
+        <ol class="pens" id="pens" aria-label="Penalties this round">
+          <li></li><li></li><li></li><li></li><li></li>
+        </ol>
+        <span class="board-score cap" aria-live="polite">
+          <span class="sr-only">Goals:</span><span id="g-goals">0</span><span class="of">/</span><span id="g-shots">0</span>
+        </span>
       </div>
+
       <div class="pitch-frame">
-        <canvas id="pitch" width="640" height="420"></canvas>
+        <canvas id="pitch" width="640" height="420" aria-label="Penalty pitch. Click the goal to shoot."></canvas>
         <div id="trophy-pop" class="trophy-pop" hidden aria-hidden="true">
           <svg viewBox="0 0 80 104">
             <defs>
@@ -33,38 +33,117 @@
                 <stop offset="100%" stop-color="#c9962b"/>
               </linearGradient>
             </defs>
-            <!-- globe -->
             <circle cx="40" cy="18" r="13" fill="url(#gold)"/>
             <path d="M27 18 h26 M40 5 v26" stroke="#e9c34f" stroke-width="1" fill="none" opacity="0.7"/>
-            <!-- arms holding the globe -->
             <path d="M29 74 C24 58 22 46 26 38 C29 32 33 29 36 30 C33 36 32 44 34 52 C36 62 38 68 39 74 Z" fill="url(#gold)"/>
             <path d="M51 74 C56 58 58 46 54 38 C51 32 47 29 44 30 C47 36 48 44 46 52 C44 62 42 68 41 74 Z" fill="url(#gold)"/>
             <path d="M33 74 q7 -4 14 0 l1 6 h-16 Z" fill="url(#gold)"/>
-            <!-- base with green bands -->
             <rect x="22" y="80" width="36" height="16" rx="5" fill="url(#gold)"/>
             <rect x="22" y="84" width="36" height="3.2" fill="#1d7a4f"/>
             <rect x="22" y="90" width="36" height="3.2" fill="#1d7a4f"/>
           </svg>
-          <span class="trophy-label mono">trophy round</span>
+          <span class="trophy-label cap">Trophy round</span>
         </div>
       </div>
-      <div class="scoreline mono">
-        <span>goals <span id="g-goals" class="tel-val">0</span>/<span id="g-shots">0</span></span>
-        <button id="g-reset" class="btn" type="button">new round</button>
+
+      <div class="controls">
+        <div class="diff" role="group" aria-label="Keeper difficulty">
+          <span class="diff-label cap">Keeper</span>
+          <button class="diff-btn cap" data-diff="0" type="button">Sunday league</button>
+          <button class="diff-btn cap" data-diff="1" type="button">Pro</button>
+          <button class="diff-btn cap" data-diff="2" type="button">World Cup final</button>
+        </div>
+        <button id="g-reset" class="btn btn-ink" type="button">New round</button>
       </div>
     </div>
   </div>
 </section>
 
 <style>
-  .pitch-wrap {
-    max-width: 640px;
+  .shootout {
+    max-width: 880px;
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+    background: var(--n10);
+    box-shadow: 0 30px 60px -30px rgba(10, 12, 22, 0.5);
   }
+
+  /* broadcast shootout bug */
+  .board {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 0 20px 0 0;
+    height: 54px;
+    color: var(--n0);
+  }
+  .board-title {
+    align-self: stretch;
+    display: grid;
+    place-items: center;
+    padding: 0 30px 0 20px;
+    background: var(--cobalt);
+    font-size: 1rem;
+    font-weight: 800;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%);
+  }
+  .pens { list-style: none; display: flex; gap: 10px; flex: 1; }
+  .pens li {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 2px var(--n6);
+  }
+  .pens li[data-r='goal'] { background: var(--volt); box-shadow: none; }
+  .pens li[data-r='miss'] { box-shadow: inset 0 0 0 2px var(--red); }
+  .pens li[data-r='miss']::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 2px;
+    bottom: 2px;
+    width: 2px;
+    background: var(--red);
+    transform: translateX(-50%) rotate(45deg);
+  }
+  .board-score { font-size: 1.6rem; font-weight: 800; letter-spacing: 0; }
+  .board-score .of { color: var(--n6); margin: 0 4px; }
+  #g-goals { color: var(--volt); }
+
   .pitch-frame { position: relative; }
+  #pitch {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: crosshair;
+    touch-action: manipulation;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 14px 14px 20px;
+    background: var(--n0);
+  }
+  .diff { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .diff-label { font-size: 0.82rem; color: var(--n6); margin-right: 6px; }
+  .diff-btn {
+    font-family: var(--font);
+    font-size: 0.86rem;
+    color: var(--n8);
+    background: var(--n2);
+    border: 0;
+    padding: 9px 18px 8px 12px;
+    cursor: pointer;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+    transition: background-color 0.2s, color 0.2s;
+  }
+  .diff-btn:hover { background: var(--n3); }
+  .diff-btn.active { background: var(--cobalt); color: var(--n0); }
+
   .trophy-pop[hidden] { display: none; }
   .trophy-pop {
     position: absolute;
@@ -76,17 +155,17 @@
     gap: 10px;
     pointer-events: none;
     z-index: 5;
-    background: radial-gradient(ellipse 45% 45% at 50% 48%, rgba(8, 16, 32, 0.85), transparent);
+    background: radial-gradient(ellipse 45% 45% at 50% 48%, rgba(10, 12, 22, 0.8), transparent);
   }
   .trophy-pop svg {
     width: 108px;
-    filter: drop-shadow(0 0 26px rgba(255, 213, 74, 0.5));
+    filter: drop-shadow(0 6px 26px rgba(255, 213, 74, 0.55));
     animation: trophy-in 0.65s cubic-bezier(0.2, 1.7, 0.4, 1);
   }
   .trophy-label {
-    font-size: 0.72rem;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
     color: #ffd54a;
     animation: trophy-in 0.65s cubic-bezier(0.2, 1.7, 0.4, 1);
   }
@@ -95,64 +174,22 @@
     0% { transform: scale(0) rotate(-14deg); opacity: 0; }
     100% { transform: scale(1) rotate(0deg); opacity: 1; }
   }
-  @keyframes trophy-out {
-    to { opacity: 0; transform: translateY(-14px); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .trophy-pop svg, .trophy-label { animation: none; }
-  }
+  @keyframes trophy-out { to { opacity: 0; transform: translateY(-14px); } }
 
-  #pitch {
-    width: 100%;
-    height: auto;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    background: radial-gradient(ellipse 90% 70% at 50% 0%, #0d1b2e, #081020);
-    cursor: crosshair;
-    touch-action: manipulation;
+  @media (max-width: 560px) {
+    .board { gap: 12px; padding-right: 14px; }
+    .board-title { padding: 0 22px 0 14px; font-size: 0.86rem; }
+    .pens { gap: 6px; }
+    .pens li { width: 14px; height: 14px; }
+    .controls { padding: 12px; }
   }
-  .diff-row {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    font-size: 0.7rem;
-    letter-spacing: 0.06em;
-  }
-  .diff-label { color: var(--faint); }
-  .diff-btn {
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    letter-spacing: 0.05em;
-    color: var(--muted);
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 99px;
-    padding: 4px 11px;
-    cursor: pointer;
-    transition: color 0.2s, border-color 0.2s, background 0.2s;
-  }
-  .diff-btn:hover { border-color: var(--border-bright); color: var(--text); }
-  .diff-btn.active {
-    color: var(--aurora);
-    border-color: rgba(74, 222, 128, 0.4);
-    background: rgba(74, 222, 128, 0.07);
-  }
-  .scoreline {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    color: var(--muted);
-    letter-spacing: 0.06em;
-  }
-  .tel-val { color: var(--aurora); }
 </style>
 
 <script>
   const cv = document.getElementById('pitch') as HTMLCanvasElement;
   const c = cv.getContext('2d')!;
   const W = cv.width, H = cv.height;
+  const FONT = 'Archivo, system-ui, sans-serif';
 
   // goal geometry
   const GOAL = { x: 120, y: 60, w: 400, h: 150 };
@@ -165,14 +202,16 @@
     { name: 'pro', mind: 0.45, row: 0.5 },
     { name: 'world cup final', mind: 0.75, row: 0.65 },
   ];
-  let diff = Math.min(2, Math.max(0, Number(localStorage.getItem('keeper-diff') ?? 1) || 0));
+  let diff = 1;
+  try { diff = Math.min(2, Math.max(0, Number(localStorage.getItem('keeper-diff') ?? 1) || 0)); } catch {}
 
   type Phase = 'ready' | 'anim' | 'over';
   type KickPose = 'idle' | 'wind' | 'through';
   let phase: Phase = 'ready';
   let goals = 0, shots = 0;
+  let results: ('goal' | 'miss')[] = [];
   let msg = 'click the goal to shoot';
-  let msgColor = '#8ba0bd';
+  let msgColor = '#ffffff';
   let kickPose: KickPose = 'idle';
 
   // keeper occupies one of 6 zones: 3 columns × 2 rows
@@ -180,81 +219,137 @@
 
   const goalsEl = document.getElementById('g-goals')!;
   const shotsEl = document.getElementById('g-shots')!;
+  const penEls = [...document.querySelectorAll<HTMLLIElement>('#pens li')];
   const diffBtns = [...document.querySelectorAll<HTMLButtonElement>('.diff-btn')];
 
   function zoneCenter(col: number, row: number) {
-    return {
-      x: GOAL.x + colW * col + colW / 2,
-      y: GOAL.y + rowH * row + rowH / 2,
-    };
+    return { x: GOAL.x + colW * col + colW / 2, y: GOAL.y + rowH * row + rowH / 2 };
+  }
+
+  // ── static backdrop: stands, LED board, striped grass ─────────
+  const bg = document.createElement('canvas');
+  bg.width = W; bg.height = H;
+  function buildBackdrop() {
+    const b = bg.getContext('2d')!;
+    const boardTop = GOAL.y + GOAL.h - 36;
+    // grass, mowed in stripes
+    for (let i = 0; i * 64 < W; i++) {
+      b.fillStyle = i % 2 ? '#2f8a4c' : '#2a7f46';
+      b.fillRect(i * 64, 0, 64, H);
+    }
+    // stands behind the goal
+    b.fillStyle = '#0c1680';
+    b.fillRect(0, 0, W, boardTop);
+    let seed = 7;
+    const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    for (let y = 6; y < boardTop - 4; y += 9) {
+      for (let x = 4; x < W; x += 9) {
+        b.globalAlpha = 0.12 + rnd() * 0.3;
+        b.fillStyle = rnd() > 0.85 ? '#e4ff3a' : '#cdd3ff';
+        b.beginPath(); b.arc(x + rnd() * 3, y + rnd() * 3, 2.4, 0, Math.PI * 2); b.fill();
+      }
+    }
+    b.globalAlpha = 1;
+    // LED board
+    b.fillStyle = '#2337ff';
+    b.fillRect(0, boardTop, W, 28);
+    // one centred ad: name in volt, the ask in white
+    b.font = `800 13px ${FONT}`;
+    if ('fontStretch' in b) (b as any).fontStretch = 'condensed'; // fits between the posts
+    b.textAlign = 'left';
+    b.textBaseline = 'middle';
+    const name = 'SARTHAK SHARMA   ', ask = 'OPEN TO SOFTWARE · DATA · ANALYTICS ROLES';
+    const x0 = (W - b.measureText(name + ask).width) / 2;
+    b.fillStyle = '#e4ff3a';
+    b.fillText(name, x0, boardTop + 15);
+    b.fillStyle = '#ffffff';
+    b.fillText(ask, x0 + b.measureText(name).width, boardTop + 15);
+    b.textBaseline = 'alphabetic';
+    // pitch lines
+    b.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+    b.lineWidth = 2;
+    b.beginPath(); b.moveTo(0, GOAL.y + GOAL.h); b.lineTo(W, GOAL.y + GOAL.h); b.stroke();
+    b.strokeRect(60, GOAL.y + GOAL.h, W - 120, H - GOAL.y - GOAL.h - 60);
+    b.beginPath(); b.arc(W / 2, H - 50, 34, Math.PI, 0); b.stroke();
+    // net
+    b.fillStyle = 'rgba(10, 12, 22, 0.25)';
+    b.fillRect(GOAL.x, GOAL.y, GOAL.w, GOAL.h);
+    b.strokeStyle = 'rgba(255, 255, 255, 0.28)';
+    b.lineWidth = 1;
+    for (let i = 0; i <= 16; i++) {
+      const nx = GOAL.x + (GOAL.w / 16) * i;
+      b.beginPath(); b.moveTo(nx, GOAL.y); b.lineTo(nx, GOAL.y + GOAL.h); b.stroke();
+    }
+    for (let i = 0; i <= 6; i++) {
+      const ny = GOAL.y + (GOAL.h / 6) * i;
+      b.beginPath(); b.moveTo(GOAL.x, ny); b.lineTo(GOAL.x + GOAL.w, ny); b.stroke();
+    }
+    // posts
+    b.strokeStyle = '#ffffff';
+    b.lineWidth = 6;
+    b.lineCap = 'round';
+    b.beginPath();
+    b.moveTo(GOAL.x, GOAL.y + GOAL.h);
+    b.lineTo(GOAL.x, GOAL.y);
+    b.lineTo(GOAL.x + GOAL.w, GOAL.y);
+    b.lineTo(GOAL.x + GOAL.w, GOAL.y + GOAL.h);
+    b.stroke();
   }
 
   function drawKeeper(x: number, y: number, diving: boolean) {
     c.save();
     c.translate(x, y);
     if (diving) c.rotate(x < W / 2 ? -0.5 : x > W / 2 ? 0.5 : 0);
-    // body
-    c.fillStyle = '#fbbf24';
-    c.beginPath();
-    c.roundRect(-11, -18, 22, 40, 8);
-    c.fill();
+    // body: all-black kit
+    c.fillStyle = '#0a0c16';
+    c.beginPath(); c.roundRect(-11, -18, 22, 40, 8); c.fill();
     // head
     c.fillStyle = '#e8c39e';
-    c.beginPath();
-    c.arc(0, -28, 9, 0, Math.PI * 2);
-    c.fill();
+    c.beginPath(); c.arc(0, -28, 9, 0, Math.PI * 2); c.fill();
     // arms out
-    c.strokeStyle = '#fbbf24';
+    c.strokeStyle = '#0a0c16';
     c.lineWidth = 6;
     c.lineCap = 'round';
+    const ay = diving ? -26 : -2;
     c.beginPath();
-    c.moveTo(-10, -12); c.lineTo(-26, diving ? -26 : -2);
-    c.moveTo(10, -12); c.lineTo(26, diving ? -26 : -2);
+    c.moveTo(-10, -12); c.lineTo(-26, ay);
+    c.moveTo(10, -12); c.lineTo(26, ay);
     c.stroke();
+    // volt gloves
+    c.fillStyle = '#e4ff3a';
+    c.beginPath(); c.arc(-27, ay, 5, 0, Math.PI * 2); c.arc(27, ay, 5, 0, Math.PI * 2); c.fill();
     c.restore();
   }
 
   // the taker — a certain #10, seen from behind
   function drawKicker(pose: KickPose) {
-    const bx = BALL_START.x - 46; // body center x
-    const footY = H - 34;         // ground line for feet
+    const bx = BALL_START.x - 46;
+    const footY = H - 34;
     const hipY = footY - 26;
     const torsoTop = hipY - 34;
 
     c.save();
     c.lineCap = 'round';
 
-    // standing leg (left)
+    // standing leg
     c.strokeStyle = '#e8c39e';
     c.lineWidth = 7;
-    c.beginPath();
-    c.moveTo(bx - 6, hipY);
-    c.lineTo(bx - 8, footY - 8);
-    c.stroke();
-    // sock + boot
+    c.beginPath(); c.moveTo(bx - 6, hipY); c.lineTo(bx - 8, footY - 8); c.stroke();
     c.strokeStyle = '#eef4fb';
     c.beginPath(); c.moveTo(bx - 8, footY - 12); c.lineTo(bx - 8, footY - 4); c.stroke();
-    c.fillStyle = '#0b1322';
+    c.fillStyle = '#0a0c16';
     c.beginPath(); c.roundRect(bx - 14, footY - 5, 13, 6, 3); c.fill();
 
-    // kicking leg (right) — pose dependent
+    // kicking leg — pose dependent
     let kneeX = bx + 8, kneeY = hipY + 12, toeX = bx + 10, toeY = footY - 2;
     if (pose === 'wind') { kneeX = bx - 2; kneeY = hipY + 8; toeX = bx - 16; toeY = footY - 14; }
     if (pose === 'through') { kneeX = bx + 16; kneeY = hipY + 4; toeX = bx + 34; toeY = footY - 26; }
     c.strokeStyle = '#e8c39e';
     c.lineWidth = 7;
-    c.beginPath();
-    c.moveTo(bx + 6, hipY);
-    c.quadraticCurveTo(kneeX, kneeY, toeX, toeY);
-    c.stroke();
-    // sock on the kicking foot
+    c.beginPath(); c.moveTo(bx + 6, hipY); c.quadraticCurveTo(kneeX, kneeY, toeX, toeY); c.stroke();
     c.strokeStyle = '#eef4fb';
-    c.lineWidth = 7;
-    c.beginPath();
-    c.moveTo((kneeX + toeX) / 2, (kneeY + toeY) / 2);
-    c.lineTo(toeX, toeY);
-    c.stroke();
-    c.fillStyle = '#0b1322';
+    c.beginPath(); c.moveTo((kneeX + toeX) / 2, (kneeY + toeY) / 2); c.lineTo(toeX, toeY); c.stroke();
+    c.fillStyle = '#0a0c16';
     c.beginPath(); c.arc(toeX + 3, toeY, 4.5, 0, Math.PI * 2); c.fill();
 
     // shorts
@@ -265,11 +360,10 @@
     const lean = pose === 'through' ? 4 : pose === 'wind' ? -3 : 0;
     c.fillStyle = '#ffdc2e';
     c.beginPath(); c.roundRect(bx - 13 + lean, torsoTop, 26, 26, 7); c.fill();
-    // green collar
     c.fillStyle = '#159347';
     c.beginPath(); c.roundRect(bx - 6 + lean, torsoTop - 1, 12, 4, 2); c.fill();
 
-    // arms (balance pose)
+    // arms
     c.strokeStyle = '#ffdc2e';
     c.lineWidth = 6;
     c.beginPath();
@@ -280,10 +374,10 @@
     // shirt print
     c.fillStyle = '#159347';
     c.textAlign = 'center';
-    c.font = '600 6px "JetBrains Mono", monospace';
+    c.font = `800 6px ${FONT}`;
     c.fillText('NEYMAR JR', bx + lean, torsoTop + 9);
-    c.font = '700 14px "JetBrains Mono", monospace';
-    c.fillText('10', bx + lean, torsoTop + 22);
+    c.font = `900 15px ${FONT}`;
+    c.fillText('10', bx + lean, torsoTop + 23);
 
     // head + hair
     c.fillStyle = '#e8c39e';
@@ -296,68 +390,38 @@
   }
 
   function drawBall(x: number, y: number, r: number) {
-    c.fillStyle = '#eef4fb';
-    c.beginPath();
-    c.arc(x, y, r, 0, Math.PI * 2);
-    c.fill();
-    c.strokeStyle = '#0a1120';
+    c.fillStyle = '#ffffff';
+    c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#0a0c16';
     c.lineWidth = 1.4;
     c.stroke();
-    // simple pentagon patch
-    c.fillStyle = '#0a1120';
-    c.beginPath();
-    c.arc(x - r * 0.25, y - r * 0.2, r * 0.32, 0, Math.PI * 2);
-    c.fill();
+    c.fillStyle = '#0a0c16';
+    c.beginPath(); c.arc(x - r * 0.25, y - r * 0.2, r * 0.32, 0, Math.PI * 2); c.fill();
   }
 
   function drawScene(ball: { x: number; y: number; r: number }, keeperPos: { x: number; y: number }, diving: boolean) {
-    c.clearRect(0, 0, W, H);
-
-    // pitch lines
-    c.strokeStyle = 'rgba(110, 203, 255, 0.14)';
-    c.lineWidth = 2;
-    c.strokeRect(60, GOAL.y + GOAL.h + 8, W - 120, H - GOAL.y - GOAL.h - 60);
-    c.beginPath();
-    c.arc(W / 2, H - 50, 34, Math.PI, 0);
-    c.stroke();
-
-    // net
-    c.strokeStyle = 'rgba(220, 231, 245, 0.10)';
-    c.lineWidth = 1;
-    for (let i = 0; i <= 10; i++) {
-      const nx = GOAL.x + (GOAL.w / 10) * i;
-      c.beginPath(); c.moveTo(nx, GOAL.y); c.lineTo(nx, GOAL.y + GOAL.h); c.stroke();
-    }
-    for (let i = 0; i <= 4; i++) {
-      const ny = GOAL.y + (GOAL.h / 4) * i;
-      c.beginPath(); c.moveTo(GOAL.x, ny); c.lineTo(GOAL.x + GOAL.w, ny); c.stroke();
-    }
-
-    // posts
-    c.strokeStyle = '#dce7f5';
-    c.lineWidth = 5;
-    c.lineCap = 'round';
-    c.beginPath();
-    c.moveTo(GOAL.x, GOAL.y + GOAL.h);
-    c.lineTo(GOAL.x, GOAL.y);
-    c.lineTo(GOAL.x + GOAL.w, GOAL.y);
-    c.lineTo(GOAL.x + GOAL.w, GOAL.y + GOAL.h);
-    c.stroke();
-
+    c.drawImage(bg, 0, 0);
     drawKeeper(keeperPos.x, keeperPos.y, diving);
     drawKicker(kickPose);
     drawBall(ball.x, ball.y, ball.r);
 
-    // message
-    c.fillStyle = msgColor;
-    c.font = '600 15px "JetBrains Mono", monospace';
+    // message on an ink plate, like a broadcast caption
+    c.font = `800 15px ${FONT}`;
     c.textAlign = 'center';
-    c.fillText(msg, W / 2, H - 12);
+    const text = msg.toUpperCase();
+    const tw = c.measureText(text).width + 32;
+    c.fillStyle = 'rgba(10, 12, 22, 0.86)';
+    c.fillRect(W / 2 - tw / 2, H - 34, tw, 26);
+    c.fillStyle = msgColor;
+    c.fillText(text, W / 2, H - 16);
   }
 
   function updateScore() {
     goalsEl.textContent = String(goals);
     shotsEl.textContent = String(shots);
+    penEls.forEach((li, i) => {
+      if (results[i]) li.dataset.r = results[i]; else delete li.dataset.r;
+    });
   }
 
   // 3+ goals in a round earns the trophy
@@ -374,18 +438,22 @@
   }
 
   function paintDiff() {
-    diffBtns.forEach((b) => b.classList.toggle('active', Number(b.dataset.diff) === diff));
+    diffBtns.forEach((b) => {
+      const on = Number(b.dataset.diff) === diff;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
   }
 
   function reset() {
-    goals = 0; shots = 0;
+    goals = 0; shots = 0; results = [];
     phase = 'ready';
     kickPose = 'idle';
     clearTimeout(trophyTimer);
     trophyEl.classList.remove('leaving');
     trophyEl.hidden = true;
     msg = `click the goal to shoot · keeper: ${DIFFS[diff]!.name}`;
-    msgColor = '#8ba0bd';
+    msgColor = '#ffffff';
     updateScore();
     drawScene({ ...BALL_START, r: 11 }, zoneCenter(1, 1), false);
   }
@@ -394,8 +462,7 @@
     if (phase !== 'ready') return;
     phase = 'anim';
 
-    const onTarget =
-      tx > GOAL.x && tx < GOAL.x + GOAL.w && ty > GOAL.y && ty < GOAL.y + GOAL.h;
+    const onTarget = tx > GOAL.x && tx < GOAL.x + GOAL.w && ty > GOAL.y && ty < GOAL.y + GOAL.h;
 
     // keeper picks a zone — difficulty sets how often he reads your mind
     const { mind, row } = DIFFS[diff]!;
@@ -424,9 +491,9 @@
 
       // resolve
       shots++;
-      if (!onTarget) { msg = 'wide! row Z of the stands'; msgColor = '#8ba0bd'; }
-      else if (saved) { msg = 'SAVED — he read you like a csv'; msgColor = '#fbbf24'; }
-      else { goals++; msg = 'GOAL! top bins'; msgColor = '#4ade80'; }
+      if (!onTarget) { msg = 'wide! row Z of the stands'; msgColor = '#cdd3ff'; results.push('miss'); }
+      else if (saved) { msg = 'SAVED — he read you like a csv'; msgColor = '#ff5a47'; results.push('miss'); }
+      else { goals++; msg = 'GOAL! top bins'; msgColor = '#e4ff3a'; results.push('goal'); }
       updateScore();
 
       if (shots >= SHOTS_PER_ROUND) {
@@ -452,15 +519,13 @@
 
   cv.addEventListener('pointerdown', (e) => {
     const rect = cv.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * W;
-    const y = ((e.clientY - rect.top) / rect.height) * H;
-    shoot(x, y);
+    shoot(((e.clientX - rect.left) / rect.width) * W, ((e.clientY - rect.top) / rect.height) * H);
   });
 
   diffBtns.forEach((b) =>
     b.addEventListener('click', () => {
       diff = Number(b.dataset.diff);
-      localStorage.setItem('keeper-diff', String(diff));
+      try { localStorage.setItem('keeper-diff', String(diff)); } catch {}
       paintDiff();
       reset();
     })
@@ -468,5 +533,11 @@
 
   document.getElementById('g-reset')!.addEventListener('click', reset);
   paintDiff();
+  buildBackdrop();
   reset();
+  // repaint once Archivo arrives so canvas text isn't in the fallback face
+  document.fonts?.ready.then(() => {
+    buildBackdrop();
+    if (phase !== 'anim') drawScene({ ...BALL_START, r: 11 }, zoneCenter(1, 1), false);
+  });
 </script>

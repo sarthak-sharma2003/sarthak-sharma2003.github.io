@@ -1,6 +1,6 @@
 # sarthak-sharma2003.github.io
 
-Personal portfolio — dark, data-driven, snowing.
+Personal portfolio, styled as a live football broadcast: cobalt plates, a score bug, a live ticker, and Edmonton snow.
 Live at **https://sarthak-sharma2003.github.io** (once published, see below).
 
 ## Adding a project (the whole point of this site)
@@ -39,13 +39,14 @@ npm run build     # production build → dist/
 
 ## What's live on the page
 
-- **Telemetry bar** — real Edmonton weather (Open-Meteo), local clock,
-  and your latest GitHub push, fetched client-side. No keys, no backend.
-- **Shelf cards** — enriched with last-push date + language from the GitHub API.
-- **Halftime** — a 5-shot penalty mini-game. The keeper reads your mind 35% of the time.
+- **Live ticker** (bottom of the hero) — real Edmonton weather (Open-Meteo), local clock,
+  your latest GitHub push, and every `live` project, fetched client-side. No keys, no backend.
+- **Score bug** (top-left) — its match clock is scroll progress: 0' at the top, FT at the footer.
+- **Shelf rows** — enriched with last-push date + language from the GitHub API.
+- **Penalties** — a 5-shot shootout with a broadcast tracker. Keeper difficulty is selectable.
 - **Companion** — opt-in cursor pet (husky / cat / rolling ball / magpie) behind the
   "adopt a companion" chip, bottom-right. Lazy-follows the cursor, idles when you stop,
-  naps in the corner during the penalty game, remembers your choice (localStorage),
+  naps in the corner during the penalties, remembers your choice (localStorage),
   ambles along the bottom on touch devices, and stays fully off under
   `prefers-reduced-motion`. Restraint rule: if the site ever needs trimming for
   professionalism, this goes first — never the shelf or the live data.

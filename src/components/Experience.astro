@@ -1,21 +1,19 @@
 ---
-// Experience + education. Outcome-first bullets, stack tagged inline.
+// Career + education. Outcome-first bullets.
 ---
 
-<section id="experience">
-  <div class="container">
-    <div class="section-head reveal">
-      <span class="index">02</span>
-      <h2>Experience</h2>
-      <span class="rule"></span>
+<section id="experience" class="sec on-ink">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Career</h2>
     </div>
 
-    <div class="timeline">
-      <article class="xp reveal">
-        <div class="xp-when">Jun 2025 — Dec 2025</div>
+    <ol class="career">
+      <li class="spell">
+        <p class="when cap">Jun 2025 – Dec 2025</p>
         <div>
           <h3>Business Systems Analyst Intern</h3>
-          <span class="org">PCL Construction · Edmonton, AB</span>
+          <p class="club cap">PCL Construction · Edmonton, AB</p>
           <ul>
             <li>
               Shipped a <strong>production AI agent</strong> (Microsoft Copilot + LLM prompting)
@@ -32,13 +30,13 @@
             </li>
           </ul>
         </div>
-      </article>
+      </li>
 
-      <article class="xp reveal">
-        <div class="xp-when">Jul 2023 — Dec 2023</div>
+      <li class="spell">
+        <p class="when cap">Jul 2023 – Dec 2023</p>
         <div>
           <h3>Data &amp; Operations Analyst Intern</h3>
-          <span class="org">Safety First Industrial Inc. · Sherwood Park, AB</span>
+          <p class="club cap">Safety First Industrial Inc. · Sherwood Park, AB</p>
           <ul>
             <li>
               Designed an end-to-end <strong>ETL pipeline</strong> in Python consolidating
@@ -55,13 +53,13 @@
             </li>
           </ul>
         </div>
-      </article>
+      </li>
 
-      <article class="xp reveal">
-        <div class="xp-when">2021 — Present</div>
+      <li class="spell">
+        <p class="when cap">2021 – Present</p>
         <div>
           <h3>BSc Computing Science, Business Minor</h3>
-          <span class="org">University of Alberta · Edmonton, AB</span>
+          <p class="club cap">University of Alberta · Edmonton, AB</p>
           <ul>
             <li>
               <strong>Gold Standard in Science</strong> (2021) ·
@@ -73,7 +71,54 @@
             </li>
           </ul>
         </div>
-      </article>
-    </div>
+      </li>
+    </ol>
   </div>
 </section>
+
+<style>
+  .career { list-style: none; border-top: 2px solid var(--n1); }
+  .spell {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 12px clamp(20px, 4vw, 56px);
+    padding: 36px 0;
+    border-bottom: 1px solid var(--n8);
+  }
+  .when {
+    font-size: 1.05rem;
+    color: var(--volt);
+    padding-top: 6px;
+  }
+  h3 {
+    font-size: clamp(1.45rem, 2.4vw, 1.95rem);
+    font-weight: 800;
+    font-stretch: 88%;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--n0);
+  }
+  .club { margin-top: 8px; font-size: 0.9rem; color: var(--n4); }
+  ul { list-style: none; margin-top: 20px; display: grid; gap: 12px; max-width: 72ch; }
+  li li {
+    position: relative;
+    padding-left: 26px;
+    color: var(--n4);
+  }
+  li li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 12px;
+    height: 4px;
+    background: var(--cobalt);
+    clip-path: polygon(3px 0, 100% 0, calc(100% - 3px) 100%, 0 100%);
+  }
+  strong { color: var(--n0); font-weight: 700; }
+
+  @media (max-width: 720px) {
+    .spell { grid-template-columns: 1fr; padding: 28px 0; }
+    .when { padding-top: 0; }
+  }
+</style>

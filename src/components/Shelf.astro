@@ -1,61 +1,189 @@
 ---
 import { projects } from '../data/projects';
+import Icon from './Icon.astro';
 
-const badgeLabel: Record<string, string> = {
-  live: 'live',
-  shipped: 'shipped',
-  building: 'in progress',
-  next: 'up next',
+const stateLabel: Record<string, string> = {
+  live: 'Live',
+  shipped: 'Shipped',
+  building: 'In progress',
+  next: 'Up next',
 };
+const num = (i: number) => String(i + 1).padStart(2, '0');
 ---
 
-<section id="projects">
-  <div class="container">
-    <div class="section-head reveal">
-      <span class="index">01</span>
+<section id="projects" class="sec">
+  <div class="wrap">
+    <div class="sec-head">
       <h2>The Shelf</h2>
-      <span class="rule"></span>
+      <p>Projects, live and shipped. Push dates come straight from the GitHub API, so you can see what's still moving.</p>
     </div>
-    <p class="section-sub reveal">
-      Projects, past and future. Live stats pulled straight from the GitHub API —
-      because a portfolio about data pipelines should probably have one.
-    </p>
 
-    <div class="shelf-grid">
-      {projects.map((p) => (
-        <article class={`card reveal ${p.status === 'next' ? 'card-ghost' : ''}`}>
-          <div class="card-top">
-            <span class={`badge badge-${p.status}`}>
-              <span class="dot"></span>{badgeLabel[p.status]}
-            </span>
-            <span class="card-year">{p.year}</span>
+    <ol class="shelf">
+      {projects.map((p, i) => (
+        <li class={`row row-${p.status}`}>
+          <span class="no" aria-hidden="true"><span>{num(i)}</span></span>
+          <div class="main">
+            <div class="head">
+              <h3>{p.title}</h3>
+              <span class={`state cap state-${p.status}`}>
+                {p.status === 'live' && <i aria-hidden="true"></i>}{stateLabel[p.status]}
+              </span>
+              <span class="yr cap">{p.year}</span>
+            </div>
+            <p class="desc">{p.description}</p>
           </div>
-          <h3 class="card-title">{p.title}</h3>
-          <p>{p.description}</p>
-          {p.tags.length > 0 && (
-            <div class="tags">
-              {p.tags.map((t) => <span class="tag">{t}</span>)}
-            </div>
-          )}
-          {(p.repo || p.demo) && (
-            <div class="card-foot">
-              <div class="card-links">
-                {p.repo && (
-                  <a href={`https://github.com/sarthak-sharma2003/${p.repo}`} target="_blank" rel="noopener">code ↗</a>
+          {p.status !== 'next' && (
+            <div class="side">
+              {p.tags.length > 0 && <p class="stack cap">{p.tags.join(' / ')}</p>}
+              <div class="links">
+                {p.demo && (
+                  <a class="btn btn-ink" href={p.demo} target="_blank" rel="noopener">
+                    Open live app<Icon name="out" /><span class="sr-only"> for {p.title}</span>
+                  </a>
                 )}
-                {p.demo && <a href={p.demo} target="_blank" rel="noopener">live app ↗</a>}
+                {p.repo && (
+                  <a class="code" href={`https://github.com/sarthak-sharma2003/${p.repo}`} target="_blank" rel="noopener">
+                    Code<Icon name="out" /><span class="sr-only"> for {p.title}</span>
+                  </a>
+                )}
               </div>
-              {p.repo && <span class="gh-stat" data-repo={p.repo}></span>}
+              {p.repo && <p class="gh-stat cap" data-repo={p.repo}></p>}
             </div>
           )}
-        </article>
+        </li>
       ))}
-    </div>
+    </ol>
   </div>
 </section>
 
+<style>
+  .shelf { list-style: none; border-top: 2px solid var(--n10); }
+
+  .row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 116px minmax(0, 1fr) 290px;
+    gap: 0 clamp(20px, 3vw, 44px);
+    padding: 34px 0;
+    border-bottom: 1px solid var(--n3);
+  }
+
+  /* the number cell: cobalt numeral that floods on hover */
+  .no {
+    position: relative;
+    align-self: start;
+    display: grid;
+    place-items: center;
+    height: 92px;
+    font-size: 4.6rem;
+    font-weight: 900;
+    font-style: italic;
+    font-stretch: 62%;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--cobalt);
+    font-variant-numeric: tabular-nums;
+    isolation: isolate;
+  }
+  .no::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--cobalt);
+    clip-path: polygon(0 0, 100% 0, calc(100% - 16px) 100%, 0 100%);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s var(--ease);
+  }
+  .no span { transition: color 0.3s var(--ease); padding-right: 0.1em; }
+  .row:hover .no::before, .row:focus-within .no::before { transform: scaleX(1); }
+  .row:hover .no span, .row:focus-within .no span { color: var(--n0); }
+
+  .head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+  h3 {
+    font-size: clamp(1.55rem, 2.6vw, 2.1rem);
+    font-weight: 800;
+    font-stretch: 88%;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin-right: 4px;
+  }
+  .state {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 16px 4px 9px;
+    font-size: 0.78rem;
+    line-height: 1.2;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  }
+  .state-live { background: var(--volt); color: var(--n10); }
+  .state-live i {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--n10);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse { 50% { opacity: 0.2; } }
+  .state-shipped { background: var(--n10); color: var(--n0); }
+  .state-building { background: var(--cobalt); color: var(--n0); }
+  .state-next { box-shadow: inset 0 0 0 1.5px var(--n5); color: var(--n6); clip-path: none; padding-right: 10px; }
+  .yr { font-size: 0.85rem; color: var(--n6); }
+
+  .desc {
+    margin-top: 14px;
+    max-width: 68ch;
+    color: var(--n7);
+    font-size: 1rem;
+  }
+
+  .side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding-top: 6px;
+  }
+  .stack { font-size: 0.82rem; color: var(--n8); line-height: 1.5; }
+  .links { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; }
+  .links .btn { padding: 12px 22px 11px 16px; font-size: 0.84rem; }
+  .code {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 800;
+    font-stretch: 85%;
+    font-size: 0.84rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--cobalt);
+    text-decoration: none;
+  }
+  .code:hover { text-decoration: underline; }
+  .gh-stat { font-size: 0.78rem; color: var(--n6); }
+  .gh-stat:empty { display: none; }
+
+  /* the reserved slot: a numbered empty space, on purpose */
+  .row-next .no { color: transparent; -webkit-text-stroke: 1.5px var(--n4); }
+  .row-next h3 { color: var(--n6); }
+  .row-next .desc { color: var(--n6); }
+  .row-next:hover .no::before { transform: scaleX(0); }
+
+  @media (max-width: 1040px) {
+    .row { grid-template-columns: 84px minmax(0, 1fr); }
+    .side { grid-column: 2; padding-top: 20px; }
+    .no { height: 70px; font-size: 3.4rem; }
+  }
+  @media (max-width: 600px) {
+    .row { grid-template-columns: 1fr; padding: 28px 0; }
+    .no { justify-self: start; height: auto; font-size: 2.6rem; padding: 0 18px 0 0; margin-bottom: 8px; }
+    .no::before { display: none; }
+    .side { grid-column: 1; }
+  }
+</style>
+
 <script>
-  // Enrich cards (and the hero telemetry bar) with live GitHub data.
+  // Enrich rows (and the hero ticker) with live GitHub data.
   // Cached in sessionStorage to stay friendly to the unauthenticated rate limit.
   interface Repo { name: string; pushed_at: string; language: string | null }
 
@@ -69,30 +197,31 @@ const badgeLabel: Record<string, string> = {
   }
 
   async function getRepos(): Promise<Repo[]> {
-    const cached = sessionStorage.getItem('gh-repos');
-    if (cached) return JSON.parse(cached);
+    try {
+      const cached = sessionStorage.getItem('gh-repos');
+      if (cached) return JSON.parse(cached);
+    } catch {}
     const res = await fetch('https://api.github.com/users/sarthak-sharma2003/repos?per_page=100');
     if (!res.ok) throw new Error(`GitHub API ${res.status}`);
     const repos: Repo[] = (await res.json()).map((r: any) => ({
       name: r.name, pushed_at: r.pushed_at, language: r.language,
     }));
-    sessionStorage.setItem('gh-repos', JSON.stringify(repos));
+    try { sessionStorage.setItem('gh-repos', JSON.stringify(repos)); } catch {}
     return repos;
   }
+
+  const setPush = (text: string) =>
+    document.querySelectorAll('.t-push').forEach((el) => { el.textContent = text; });
 
   getRepos()
     .then((repos) => {
       const byName = new Map(repos.map((r) => [r.name.toLowerCase(), r]));
       document.querySelectorAll<HTMLElement>('.gh-stat[data-repo]').forEach((el) => {
         const r = byName.get(el.dataset.repo!.toLowerCase());
-        if (r) el.textContent = `pushed ${relTime(r.pushed_at)}${r.language ? ' · ' + r.language : ''}`;
+        if (r) el.textContent = `Pushed ${relTime(r.pushed_at)}${r.language ? ' · ' + r.language : ''}`;
       });
       const latest = repos.reduce((a, b) => (a.pushed_at > b.pushed_at ? a : b));
-      const heroEl = document.getElementById('last-commit');
-      if (heroEl) heroEl.textContent = relTime(latest.pushed_at);
+      setPush(`${latest.name}, ${relTime(latest.pushed_at)}`);
     })
-    .catch(() => {
-      const heroEl = document.getElementById('last-commit');
-      if (heroEl) heroEl.textContent = 'recently';
-    });
+    .catch(() => setPush('recently'));
 </script>
