@@ -13,7 +13,7 @@ Scope: the whole single-page portfolio. Mode: Experience. Visitor: a recruiter f
 
 THESIS: The portfolio as a live football broadcast of one player: player-intro card, live ticker, match-state statuses. Refuses the dark dev card grid with mono labels.
 
-OWN-WORLD: Cool-white studio ground, committed vivid cobalt plates with slanted edges, volt for LIVE only, navy ink; one numbered neutral ramp. Archivo across widths: expanded black italic for names, condensed caps for labels, tabular figures for data.
+OWN-WORLD: Cool-white studio ground, committed vivid cobalt plates with slanted edges, volt as the signal (live or active state, the primary action, the name), navy ink; one numbered neutral ramp. Archivo across widths: expanded black italic for names, condensed caps for labels, tabular figures for data.
 
 STORY: Who he is and that his work is live (first viewport), proof (shelf), track record (career, toolkit, honours), a break (shootout), contact (full time).
 

@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-17T00:00:00Z",
+  "title": "Design System: Sarthak Sharma Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "cobalt": { "role": "primary", "displayName": "Broadcast Cobalt", "canonical": "#2337ff", "tonalRamp": ["#0c1680", "#1424c4", "#2337ff", "#3348ff", "#6a78ff", "#9aa4ff", "#cdd3ff", "#eceeff"] },
+      "volt": { "role": "secondary", "displayName": "Volt", "canonical": "#e4ff3a", "tonalRamp": ["#3a4400", "#6b7a00", "#a3b800", "#c6e000", "#e4ff3a", "#ecff74", "#f4ffa8", "#fbffdb"] },
+      "n1": { "role": "neutral", "displayName": "Studio Ramp", "canonical": "#f3f4f8", "tonalRamp": ["#0a0c16", "#171a27", "#2b3043", "#454b5f", "#60667b", "#8a90a4", "#b2b7c7", "#f3f4f8"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The stacked name." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles." },
+      "label": { "displayName": "Label", "purpose": "Condensed caps for tabs, states, data." }
+    },
+    "shadows": [
+      { "name": "bar-float", "value": "0 10px 28px -10px rgba(10,12,22,0.45)", "purpose": "Score bug and tab bar." },
+      { "name": "monitor", "value": "18px 26px 40px -22px rgba(10,12,22,0.55)", "purpose": "Screenshot monitors." }
+    ],
+    "motion": [
+      { "name": "ease", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "All authored and hover motion." },
+      { "name": "stinger", "value": "view() cover 0% to 38%", "purpose": "Scroll-linked heading sweep." }
+    ],
+    "breakpoints": [
+      { "name": "row-stack", "value": "600px" },
+      { "name": "tablet", "value": "1040px" },
+      { "name": "nav-collapse", "value": "860px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Volt Button",
+      "kind": "button",
+      "refersTo": "button-volt",
+      "description": "Primary action plate.",
+      "html": "<a class=\"ds-btn\" href=\"#\">Email me</a>",
+      "css": ".ds-btn{display:inline-flex;padding:16px 28px 15px 22px;background:#e4ff3a;color:#0a0c16;font:800 0.95rem/1 Archivo,system-ui,sans-serif;font-stretch:85%;text-transform:uppercase;letter-spacing:.05em;text-decoration:none;clip-path:polygon(0 0,100% 0,calc(100% - 12px) 100%,0 100%);transition:background-color .25s}.ds-btn:hover{background:#fff}.ds-btn:focus-visible{outline:3px solid #2337ff;outline-offset:3px}"
+    },
+    {
+      "name": "State Plate",
+      "kind": "chip",
+      "refersTo": "state-live",
+      "description": "Word-based project status.",
+      "html": "<span class=\"ds-live\">Live</span>",
+      "css": ".ds-live{display:inline-block;padding:6px 14px 6px 10px;background:#e4ff3a;color:#0a0c16;font:700 0.78rem/1 Archivo,system-ui,sans-serif;font-stretch:75%;text-transform:uppercase;letter-spacing:.04em;clip-path:polygon(0 0,100% 0,calc(100% - 8px) 100%,0 100%)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Match Centre",
+    "overview": "One player, one broadcast: cobalt plates, slanted edges, volt as the only signal, one Archivo family across widths.",
+    "keyCharacteristics": ["Slanted plates only", "One neutral ramp", "State is a word", "Numbers as headlines"],
+    "rules": [
+      { "name": "The One Ramp Rule", "body": "Greys come from n0 to n10 only.", "section": "colors" },
+      { "name": "The Signal Rule", "body": "Volt marks what is live or what to press.", "section": "colors" },
+      { "name": "The Width Rule", "body": "Change voice with font-stretch and weight, not a second family.", "section": "typography" }
+    ],
+    "dos": ["Do build new surfaces from slanted plates and the n0 to n10 ramp."],
+    "donts": ["Don't use dark dev-card grids, mono labels or rounded-card layouts.", "Don't spend volt on decoration or large fills."]
+  }
+}
