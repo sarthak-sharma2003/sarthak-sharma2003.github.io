@@ -4,12 +4,12 @@
 // or the live data. No splash, no gate — just a quiet chip in the corner.
 ---
 
-<button id="adopt-chip" class="adopt-chip mono" type="button" aria-haspopup="true" aria-expanded="false">
+<button id="adopt-chip" class="adopt-chip cap away" type="button" aria-haspopup="true" aria-expanded="false">
   adopt a companion
 </button>
 
 <div id="pet-picker" class="picker" hidden>
-  <p class="picker-title mono">choose wisely</p>
+  <p class="picker-title cap">choose wisely</p>
   <div class="picker-row">
     <button class="pick" data-pick="husky" type="button">
       <svg viewBox="0 0 48 48" class="mini"><g>
@@ -59,7 +59,7 @@
       <span>magpie</span>
     </button>
   </div>
-  <button id="pet-release" class="release mono" type="button" hidden>release into the wild</button>
+  <button id="pet-release" class="release cap" type="button" hidden>release into the wild</button>
 </div>
 
 <div id="pet" class="pet" data-pet="" data-state="sit" hidden aria-hidden="true">
@@ -107,63 +107,61 @@
       <path d="M26 38 v3 M31 38 v3" stroke="#f0a35e" stroke-width="1.6"/>
     </svg>
   </div>
-  <span class="zzz mono" aria-hidden="true">z<span>z</span></span>
+  <span class="zzz cap" aria-hidden="true">z<span>z</span></span>
 </div>
 
 <style>
   .adopt-chip {
     position: fixed;
-    right: 18px;
-    bottom: 18px;
+    right: 16px;
+    bottom: 16px;
     z-index: 45;
-    font-size: 0.66rem;
-    letter-spacing: 0.06em;
-    color: var(--faint);
-    background: rgba(12, 19, 34, 0.75);
-    border: 1px solid var(--border);
-    border-radius: 99px;
-    padding: 7px 13px;
+    font-family: var(--font);
+    font-size: 0.8rem;
+    color: var(--n10);
+    background: var(--n0);
+    border: 0;
+    padding: 10px 22px 9px 14px;
     cursor: pointer;
-    backdrop-filter: blur(6px);
-    transition: color 0.2s, border-color 0.2s;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
+    box-shadow: 0 8px 22px -8px rgba(10, 12, 22, 0.4);
+    transition: color 0.2s, background-color 0.2s;
   }
-  .adopt-chip:hover { color: var(--ice); border-color: var(--border-bright); }
+  .adopt-chip:hover { background: var(--volt); }
+  .adopt-chip.away { opacity: 0; transform: translateY(12px); pointer-events: none; }
+  .adopt-chip { transition: color 0.2s, background-color 0.2s, opacity 0.4s var(--ease), transform 0.4s var(--ease); }
 
   .picker {
     position: fixed;
-    right: 18px;
-    bottom: 58px;
+    right: 16px;
+    bottom: 60px;
     z-index: 46;
-    background: var(--panel);
-    border: 1px solid var(--border-bright);
-    border-radius: 12px;
+    background: var(--n0);
+    border-top: 4px solid var(--cobalt);
     padding: 14px;
-    width: 248px;
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
+    width: 260px;
+    box-shadow: 0 20px 44px -12px rgba(10, 12, 22, 0.45);
   }
   .picker-title {
-    font-size: 0.62rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--faint);
+    font-size: 0.8rem;
+    color: var(--n6);
     margin-bottom: 10px;
   }
   .picker-row { display: flex; gap: 6px; }
   .pick {
     flex: 1;
-    background: var(--bg-raised);
-    border: 1px solid var(--border);
-    border-radius: 9px;
+    background: var(--n2);
+    border: 0;
     padding: 6px 2px 5px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 2px;
-    transition: border-color 0.2s, transform 0.15s;
+    transition: background-color 0.2s, transform 0.15s;
   }
-  .pick:hover { border-color: var(--ice); transform: translateY(-2px); }
-  .pick span { font-family: var(--font-mono); font-size: 0.58rem; color: var(--muted); }
+  .pick:hover { background: var(--cobalt-tint); transform: translateY(-2px); }
+  .pick span { font-size: 0.72rem; font-weight: 700; font-stretch: 80%; color: var(--n8); }
   .mini { width: 30px; height: 30px; animation: mini-bob 1.6s ease-in-out infinite; }
   .pick:nth-child(2) .mini { animation-delay: 0.3s; }
   .pick:nth-child(4) .mini { animation-delay: 0.6s; }
@@ -174,16 +172,15 @@
   .release {
     margin-top: 10px;
     width: 100%;
-    font-size: 0.62rem;
-    letter-spacing: 0.06em;
-    color: var(--faint);
+    font-family: var(--font);
+    font-size: 0.76rem;
+    color: var(--n6);
     background: transparent;
-    border: 1px dashed var(--border-bright);
-    border-radius: 8px;
-    padding: 6px;
+    border: 1.5px dashed var(--n4);
+    padding: 7px;
     cursor: pointer;
   }
-  .release:hover { color: var(--amber); border-color: var(--amber); }
+  .release:hover { color: var(--red); border-color: var(--red); }
 
   /* ── the pet itself ─────────────────────────────────────────── */
   .pet {
@@ -226,7 +223,7 @@
     top: -12px;
     right: -2px;
     font-size: 0.6rem;
-    color: var(--ice);
+    color: var(--cobalt);
     opacity: 0;
   }
   .zzz span { font-size: 0.48rem; display: inline-block; margin-left: 1px; }
@@ -274,6 +271,12 @@
 
   if (!reduced) {
     py = window.innerHeight - 64;
+
+    // stay out of the hero's way (ticker on desktop, mascot on phones)
+    const hero = document.getElementById('top');
+    if (hero) new IntersectionObserver(([e]) => {
+      chip.classList.toggle('away', e.isIntersecting && picker.hidden);
+    }, { threshold: 0.35 }).observe(hero);
 
     // ── picker UI ───────────────────────────────────────────────
     const openPicker = (open: boolean) => {

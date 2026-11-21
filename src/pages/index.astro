@@ -7,27 +7,33 @@ import Skills from '../components/Skills.astro';
 import Certifications from '../components/Certifications.astro';
 import Game from '../components/Game.astro';
 import Companion from '../components/Companion.astro';
+import Icon from '../components/Icon.astro';
+
+const EMAIL = 'sarthak7@ualberta.ca';
 ---
 
 <Base
   title="Sarthak Sharma — software · data · analytics"
   description="Sarthak Sharma builds web scrapers, data pipelines, and AI agents. CS + Business at the University of Alberta. Projects shipped, in progress, and up next."
 >
-  <nav class="nav">
-    <div class="nav-inner">
-      <a class="nav-name" href="#top">sarthak<span class="accent">.</span>sharma</a>
-      <div class="nav-links">
-        <a href="#projects">/shelf</a>
-        <a href="#experience">/experience</a>
-        <a href="#skills">/toolkit</a>
-        <a href="#certs">/certs</a>
-        <a href="#halftime">/halftime</a>
-        <a href="mailto:sarthak7@ualberta.ca">/contact</a>
-      </div>
-    </div>
-  </nav>
+  <header class="bug-bar">
+    <a class="bug" href="#top" aria-label="Sarthak Sharma, back to top">
+      <span class="bug-mark" aria-hidden="true">SS</span>
+      <span class="bug-name cap">Sarthak Sharma</span>
+      <span class="bug-live" aria-hidden="true"></span>
+      <span class="bug-clock cap" id="bug-min" aria-hidden="true">0'</span>
+      <span class="bug-sec cap" id="bug-sec" aria-hidden="true">Kick-off</span>
+    </a>
+    <nav class="tabs cap" aria-label="Sections">
+      <a href="#projects" data-sec="projects">Shelf</a>
+      <a href="#experience" data-sec="experience">Career</a>
+      <a href="#skills" data-sec="skills">Toolkit</a>
+      <a href="#halftime" data-sec="halftime">Penalties</a>
+      <a class="tab-mail" href={`mailto:${EMAIL}`}><Icon name="mail" />Email</a>
+    </nav>
+  </header>
 
-  <main id="top">
+  <main>
     <Hero />
     <Shelf />
     <Experience />
@@ -36,18 +42,314 @@ import Companion from '../components/Companion.astro';
     <Game />
   </main>
 
-  <footer>
-    <div class="container">
-      <div class="foot-links">
-        <a href="mailto:sarthak7@ualberta.ca">email</a>
-        <a href="https://github.com/sarthak-sharma2003" target="_blank" rel="noopener">github</a>
-        <a href="https://linkedin.com/in/sarthak-sharma07" target="_blank" rel="noopener">linkedin</a>
+  <footer id="contact" class="ft on-cobalt">
+    <div class="wrap">
+      <h2 class="ft-title">Full time.</h2>
+      <p class="ft-lede">Hiring for software, data or analytics? Let's talk.</p>
+      <a class="ft-mail" href={`mailto:${EMAIL}`}>{EMAIL}</a>
+      <div class="ft-links">
+        <a class="btn btn-white" href="https://linkedin.com/in/sarthak-sharma07" target="_blank" rel="noopener">LinkedIn<Icon name="out" /></a>
+        <a class="btn btn-line" href="https://github.com/sarthak-sharma2003" target="_blank" rel="noopener">GitHub<Icon name="out" /></a>
       </div>
-      <p class="sign">
-        built with Astro · deployed on GitHub Pages · snow is free in Edmonton
-      </p>
+      <div class="ft-sign">
+        <p>Built with Astro · deployed on GitHub Pages · snow is free in Edmonton</p>
+        <svg class="igloo" viewBox="0 0 160 70" aria-hidden="true">
+          <path d="M14 66a52 52 0 0 1 104 0Z" fill="#fff" />
+          <path d="M26 52h80M18 61h96M40 42h52M60 33h12" stroke="#2337ff" stroke-opacity=".35" stroke-width="1.5" fill="none" />
+          <path d="M44 66v-5M70 66v-5M96 66v-5M32 61v-9M58 61v-9M84 61v-9M108 61v-9M50 52v-10M76 52v-10M96 52v-8" stroke="#2337ff" stroke-opacity=".35" stroke-width="1.5" />
+          <path d="M104 66a22 24 0 0 1 44 0Z" fill="#fff" />
+          <path d="M114 66a12 14 0 0 1 24 0Z" fill="#0c1680" />
+          <ellipse cx="126" cy="65" rx="14" ry="7" fill="#e4ff3a" opacity=".55" />
+          <circle cx="66" cy="49" r="5" fill="#e4ff3a" />
+          <rect y="65" width="160" height="3" fill="#fff" />
+        </svg>
+      </div>
     </div>
   </footer>
 
   <Companion />
+
+  <div class="cursor" id="cursor" aria-hidden="true">
+    <span class="cur-ring"><span class="cur-label"></span></span>
+    <span class="cur-dot"></span>
+  </div>
 </Base>
+
+<style>
+  /* ── score bug + tabs ─────────────────────────────────────── */
+  .bug-bar {
+    position: fixed;
+    top: 14px;
+    left: var(--gutter);
+    right: var(--gutter);
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    pointer-events: none;
+  }
+  .bug-bar > * { pointer-events: auto; }
+
+  .bug {
+    display: flex;
+    align-items: stretch;
+    height: 40px;
+    text-decoration: none;
+    color: var(--n10);
+    background: var(--n0);
+    padding: 4px;
+    box-shadow: 0 10px 28px -10px rgba(10, 12, 22, 0.45);
+    clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+  }
+  .bug-mark {
+    display: grid;
+    place-items: center;
+    padding: 0 10px 0 9px;
+    background: var(--cobalt);
+    color: var(--n0);
+    font-weight: 900;
+    font-style: italic;
+    font-stretch: 112%;
+    font-size: 0.95rem;
+    letter-spacing: -0.02em;
+  }
+  .bug-name, .bug-clock, .bug-sec {
+    display: grid;
+    place-items: center;
+    padding: 0 12px;
+    font-size: 0.86rem;
+    line-height: 1;
+  }
+  .bug-clock {
+    background: var(--n10);
+    color: var(--volt);
+    min-width: 50px;
+  }
+  .bug-sec { color: var(--n6); padding-right: 22px; transition: background-color 0.2s, color 0.2s; }
+  .bug.goal .bug-sec { display: grid; background: var(--volt); color: var(--n10); }
+  .bug.goal { animation: goal-flash 0.6s var(--ease); }
+  @keyframes live-pulse { 50% { opacity: 0.2; } }
+  @keyframes goal-flash {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.12); }
+    100% { transform: scale(1); }
+  }
+
+  .tabs {
+    display: flex;
+    align-items: stretch;
+    height: 40px;
+    background: var(--n10);
+    box-shadow: 0 10px 28px -10px rgba(10, 12, 22, 0.45);
+    clip-path: polygon(12px 0, 100% 0, 100% 100%, 0 100%);
+    padding-left: 10px;
+  }
+  .tabs a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 14px;
+    color: var(--n1);
+    text-decoration: none;
+    font-size: 0.86rem;
+    transition: color 0.2s, background-color 0.2s;
+  }
+  .tabs a:hover, .tabs a[aria-current='true'] { color: var(--volt); }
+  .tabs .tab-mail { background: var(--volt); color: var(--n10); padding: 0 16px; }
+  .tabs .tab-mail:hover { background: var(--n0); color: var(--n10); }
+
+  /* phones: the ticker is below the fold, so the bug carries the LIVE pulse */
+  .bug-live { display: none; }
+  @media (max-width: 860px) {
+    .bug-live { display: grid; place-items: center; width: 22px; background: var(--n10); }
+    .bug-live::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--volt);
+      animation: live-pulse 1.4s ease-in-out infinite;
+    }
+    .bug-sec, .tabs a:not(.tab-mail) { display: none; }
+    .tabs { padding-left: 8px; }
+  }
+  @media (max-width: 420px) {
+    .bug-name { display: none; }
+  }
+
+  /* ── cursor: dot + lagging ring that says what a click will do ── */
+  :global(html.custom-cursor), :global(html.custom-cursor *) { cursor: none !important; }
+  .cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    pointer-events: none;
+    mix-blend-mode: difference;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .cursor.on { opacity: 1; }
+  .cur-dot, .cur-ring { position: fixed; left: 0; top: 0; border-radius: 50%; }
+  .cur-dot { width: 8px; height: 8px; margin: -4px 0 0 -4px; background: #fff; }
+  /* the ring is drawn at its largest size and scaled down: no layout work */
+  .cur-ring {
+    width: 86px;
+    height: 86px;
+    margin: -43px 0 0 -43px;
+    border: 4px solid #fff;
+    display: grid;
+    place-items: center;
+    scale: 0.44;
+    transition: scale 0.35s var(--ease), background-color 0.25s;
+  }
+  .cursor.hot .cur-ring { scale: 0.7; }
+  .cursor.labelled .cur-ring { scale: 1; border-width: 2px; background: #fff; }
+  .cur-label {
+    font-size: 0.78rem;
+    font-weight: 800;
+    font-stretch: 80%;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #000;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .cursor.labelled .cur-label { opacity: 1; }
+
+  /* ── full time ───────────────────────────────────────────── */
+  .ft {
+    background: var(--cobalt);
+    color: var(--n0);
+    padding: calc(clamp(80px, 12vw, 150px) + 40px) 0 40px;
+    overflow: hidden;
+    clip-path: polygon(0 64px, 100% 0, 100% 100%, 0 100%);
+  }
+  .ft-title {
+    font-size: clamp(3.2rem, 10vw, 6rem);
+    font-weight: 900;
+    font-style: italic;
+    font-stretch: 118%;
+    text-transform: uppercase;
+    letter-spacing: -0.035em;
+    line-height: 0.9;
+  }
+  .ft-lede {
+    margin-top: 22px;
+    font-size: 1.15rem;
+    color: var(--cobalt-tint);
+  }
+  .ft-mail {
+    display: inline-block;
+    margin-top: clamp(28px, 4vw, 44px);
+    font-size: clamp(1.5rem, 6.2vw, 4.6rem);
+    font-weight: 800;
+    font-stretch: 100%;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    text-decoration: underline;
+    text-decoration-color: var(--cobalt-line);
+    text-decoration-thickness: 0.06em;
+    text-underline-offset: 0.14em;
+    overflow-wrap: anywhere;
+    transition: text-decoration-color 0.3s var(--ease), color 0.3s var(--ease);
+  }
+  .ft-mail:hover { color: var(--volt); text-decoration-color: var(--volt); }
+  .ft-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+
+  .ft-sign {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    margin-top: clamp(64px, 9vw, 120px);
+    border-top: 2px solid var(--cobalt-line);
+    padding-top: 18px;
+  }
+  .ft-sign p { font-size: 0.9rem; color: var(--cobalt-tint); }
+  /* igloo sits on the footer's bottom edge, left, clear of the companion chip */
+  .ft-sign { flex-direction: row-reverse; }
+  .ft-sign p { padding-bottom: 6px; text-align: right; }
+  .igloo { width: 150px; flex: none; margin-bottom: -40px; }
+  @media (max-width: 560px) {
+    .ft-sign { flex-direction: column; align-items: flex-start; }
+    .ft-sign p { text-align: left; }
+    .igloo { width: 120px; }
+  }
+</style>
+
+<script>
+  // Signature: the score bug's clock is scroll progress (0' → 90' → FT),
+  // and it names the section you're in.
+  const minEl = document.getElementById('bug-min')!;
+  const secEl = document.getElementById('bug-sec')!;
+  const tabs = [...document.querySelectorAll<HTMLAnchorElement>('.tabs a[data-sec]')];
+  const LABELS: Record<string, string> = {
+    top: 'Kick-off', projects: 'The Shelf', experience: 'Career', skills: 'Toolkit',
+    certs: 'Certifications', halftime: 'Penalties', contact: 'Full time',
+  };
+  let current = 'top';
+  let queued = false;
+
+  function paintClock() {
+    queued = false;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    const p = max > 0 ? scrollY / max : 0;
+    minEl.textContent = p > 0.985 ? 'FT' : current === 'halftime' ? 'PENS' : `${Math.round(p * 90)}'`;
+  }
+  addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(paintClock); } }, { passive: true });
+
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      current = e.target.id;
+      secEl.textContent = LABELS[current] ?? '';
+      tabs.forEach((t) => t.setAttribute('aria-current', String(t.dataset.sec === current)));
+      paintClock();
+    }
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  Object.keys(LABELS).forEach((id) => { const el = document.getElementById(id); if (el) io.observe(el); });
+
+  // ── custom cursor (fine pointers, motion allowed) ───────────
+  if (matchMedia('(pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const cur = document.getElementById('cursor')!;
+    const dot = cur.querySelector<HTMLElement>('.cur-dot')!;
+    const ring = cur.querySelector<HTMLElement>('.cur-ring')!;
+    const label = cur.querySelector<HTMLElement>('.cur-label')!;
+    document.documentElement.classList.add('custom-cursor');
+    let x = -100, y = -100, rx = -100, ry = -100;
+    addEventListener('pointermove', (e) => {
+      x = e.clientX; y = e.clientY;
+      cur.classList.add('on');
+      dot.style.transform = `translate(${x}px, ${y}px)`;
+      const t = e.target as Element;
+      const text = document.documentElement.hasAttribute('data-near-ball')
+        ? 'Kick' : t.closest('[data-cursor]')?.getAttribute('data-cursor') ?? '';
+      label.textContent = text;
+      cur.classList.toggle('labelled', !!text);
+      cur.classList.toggle('hot', !text && !!t.closest('a, button'));
+    }, { passive: true });
+    document.addEventListener('pointerleave', () => cur.classList.remove('on'));
+    (function follow() {
+      rx += (x - rx) * 0.2; ry += (y - ry) * 0.2;
+      ring.style.transform = `translate(${rx}px, ${ry}px)`;
+      requestAnimationFrame(follow);
+    })();
+  }
+
+  // event state: a goal in the shootout flashes the bug
+  const bug = document.querySelector<HTMLElement>('.bug')!;
+  let goalTimer = 0;
+  addEventListener('ss:goal', () => {
+    clearTimeout(goalTimer);
+    bug.classList.remove('goal');
+    void bug.offsetWidth; // restart the flash
+    bug.classList.add('goal');
+    secEl.textContent = 'Goal!';
+    goalTimer = window.setTimeout(() => {
+      bug.classList.remove('goal');
+      secEl.textContent = LABELS[current] ?? '';
+    }, 1800);
+  });
+</script>

@@ -1,80 +1,82 @@
 ---
 import { certs } from '../data/certs';
+import Icon from './Icon.astro';
 ---
 
-<section id="certs">
-  <div class="container">
-    <div class="section-head reveal">
-      <span class="index">04</span>
+<section id="certs" class="sec certs">
+  <div class="wrap">
+    <div class="sec-head">
       <h2>Certifications</h2>
-      <span class="rule"></span>
     </div>
 
-    <div class="cert-grid">
+    <ol class="honours">
       {certs.map((cert) => (
-        <div class="cert reveal">
-          <div class="cert-top mono">
-            <span class="cert-issuer">{cert.issuer}</span>
-            <span class="cert-year">{cert.year}</span>
-          </div>
+        <li>
+          <span class="year">{cert.year}</span>
           <h3>{cert.title}</h3>
-          <div class="cert-verify mono">
+          <p class="issuer cap">
+            {cert.issuer}
             {cert.verifyUrl ? (
-              <a href={cert.verifyUrl} target="_blank" rel="noopener">
-                verify credential ↗{cert.credentialId && ` · ${cert.credentialId}`}
+              <a class="verify" href={cert.verifyUrl} target="_blank" rel="noopener">
+                Verify{cert.credentialId && ` · ${cert.credentialId}`}<Icon name="out" />
               </a>
             ) : cert.credentialId ? (
-              <span class="cert-id">id: {cert.credentialId}</span>
-            ) : (
-              <span class="cert-slot">verification key — slot reserved</span>
-            )}
-          </div>
-        </div>
+              <span class="verify">ID {cert.credentialId}</span>
+            ) : null}
+          </p>
+        </li>
       ))}
-    </div>
+    </ol>
   </div>
 </section>
 
 <style>
-  .cert-grid {
+  .certs { padding-top: 0; }
+  .honours { list-style: none; border-top: 2px solid var(--n10); }
+  li {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px;
+    grid-template-columns: 116px minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 6px clamp(20px, 3vw, 44px);
+    padding: 22px 0;
+    border-bottom: 1px solid var(--n3);
   }
-  .cert {
-    background: var(--bg-raised);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 22px;
+  .year {
+    font-size: 2.6rem;
+    font-weight: 900;
+    font-style: italic;
+    font-stretch: 62%;
+    line-height: 1;
+    color: var(--cobalt);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+  h3 {
+    font-size: clamp(1.2rem, 2vw, 1.55rem);
+    font-weight: 800;
+    font-stretch: 88%;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+  .issuer {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    transition: border-color 0.25s;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px 18px;
+    font-size: 0.85rem;
+    color: var(--n6);
+    text-align: right;
   }
-  .cert:hover { border-color: var(--border-bright); }
-  .cert-top {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    font-size: 0.68rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+  .verify {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--cobalt);
+    text-decoration: none;
   }
-  .cert-issuer { color: var(--ice); }
-  .cert-year { color: var(--faint); }
-  .cert h3 { font-family: var(--font-display); font-size: 0.98rem; font-weight: 650; line-height: 1.4; flex: 1; }
-  .cert-verify {
-    font-size: 0.7rem;
-    border-top: 1px solid var(--border);
-    padding-top: 11px;
-  }
-  .cert-verify a { color: var(--aurora); }
-  .cert-id { color: var(--muted); }
-  .cert-slot {
-    color: var(--faint);
-    border: 1px dashed var(--border-bright);
-    border-radius: 6px;
-    padding: 3px 8px;
-    display: inline-block;
+  @media (max-width: 720px) {
+    li { grid-template-columns: 64px minmax(0, 1fr); }
+    .year { font-size: 1.9rem; text-align: left; }
+    .issuer { grid-column: 2; justify-content: flex-start; text-align: left; }
   }
 </style>
